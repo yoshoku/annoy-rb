@@ -49,7 +49,7 @@ module Annoy
                  AnnoyIndexHamming.new(@n_features)
                when 'euclidean'
                  AnnoyIndexEuclidean.new(@n_features)
-               when 'mahattan'
+               when 'manhattan'
                  AnnoyIndexManhattan.new(@n_features)
                else
                  raise ArgumentError, "No such metric: #{@metric}."
