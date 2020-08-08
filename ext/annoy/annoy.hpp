@@ -19,6 +19,8 @@
 #ifndef ANNOY_HPP
 #define ANNOY_HPP 1
 
+#include <typeinfo>
+
 #include <ruby.h>
 #include <annoylib.h>
 #include <kissrandom.h>
