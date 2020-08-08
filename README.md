@@ -26,7 +26,7 @@ Note: Annoy.rb does not require the installation of another external library.
 require 'annoy'
 
 f = 40 # length of item vector that will be indexed.
-t = Annoy::AnnoyIndex(f, 'angular')
+t = Annoy::AnnoyIndex.new(n_features: f, metric: 'angular')
 
 1000.times do |i|
   v = Array.new(f) { rand }
@@ -36,7 +36,7 @@ end
 t.build(10) # 10 trees.
 t.save('test.ann')
 
-u = Annoy::AnnoyIndex(f, 'angular')
+u = Annoy::AnnoyIndex.new(n_features: f, metric: 'angular')
 u.load('test.ann')
 p u.get_nns_by_item(0, 100) # will find the 100 nearest neighbors.
 ```
