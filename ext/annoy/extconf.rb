@@ -1,7 +1,8 @@
 require 'mkmf'
 
-abort 'Missing stdc++' unless have_library('stdc++')
-# $CXXFLAGS += " -std=c++14"
+abort 'libstdc++ is not found.' unless have_library('stdc++')
+
+$CXXFLAGS << " -march=native"
 $INCFLAGS << " -I$(srcdir)/src"
 $VPATH << "$(srcdir)/src"
 
