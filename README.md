@@ -1,5 +1,9 @@
 # Annoy.rb
 
+[![Build Status](https://travis-ci.org/yoshoku/annoy.rb.svg?branch=master)](https://travis-ci.org/yoshoku/annoy.rb)
+[![Gem Version](https://badge.fury.io/rb/annoy-rb.svg)](https://badge.fury.io/rb/annoy-rb)
+[![License](https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg)](https://github.com/yoshoku/annoy.rb/blob/master/LICENSE.txt)
+
 Annoy.rb is a Ruby binding for the [Annoy (Approximate Nearest Neighbors Oh Yeah)](https://github.com/spotify/annoy).
 
 ## Installation
