@@ -6,11 +6,10 @@ Gem::Specification.new do |spec|
   spec.authors       = ['yoshoku']
   spec.email         = ['yoshoku@outlook.com']
 
-  spec.summary       = 'Annoy wrapper for Ruby.'
-  spec.description   = 'Annoy wrapper for Ruby.'
+  spec.summary       = 'Ruby binding for the Annoy (Approximate Nearest Neighbors Oh Yeah).'
+  spec.description   = 'Annoy.rb is a Ruby binding for the Annoy (Approximate Nearest Neighbors Oh Yeah).'
   spec.homepage      = 'https://github.com/yoshoku/annoy.rb'
   spec.license       = 'Apache-2.0'
-  spec.required_ruby_version = Gem::Requirement.new('>= 2.3.0')
 
   spec.metadata['homepage_uri'] = spec.homepage
   spec.metadata['source_code_uri'] = spec.homepage
