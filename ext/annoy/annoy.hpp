@@ -25,11 +25,17 @@
 #include <annoylib.h>
 #include <kissrandom.h>
 
-typedef AnnoyIndex<int, double, Angular, Kiss64Random> AnnoyIndexAngular;
-typedef AnnoyIndex<int, double, DotProduct, Kiss64Random> AnnoyIndexDotProduct;
-typedef AnnoyIndex<int, uint64_t, Hamming, Kiss64Random> AnnoyIndexHamming;
-typedef AnnoyIndex<int, double, Euclidean, Kiss64Random> AnnoyIndexEuclidean;
-typedef AnnoyIndex<int, double, Manhattan, Kiss64Random> AnnoyIndexManhattan;
+#ifdef ANNOYLIB_MULTITHREADED_BUILD
+  typedef AnnoyIndexMultiThreadedBuildPolicy AnnoyIndexThreadedBuildPolicy;
+#else
+  typedef AnnoyIndexSingleThreadedBuildPolicy AnnoyIndexThreadedBuildPolicy;
+#endif
+
+typedef AnnoyIndex<int, double, Angular, Kiss64Random, AnnoyIndexThreadedBuildPolicy> AnnoyIndexAngular;
+typedef AnnoyIndex<int, double, DotProduct, Kiss64Random, AnnoyIndexThreadedBuildPolicy> AnnoyIndexDotProduct;
+typedef AnnoyIndex<int, uint64_t, Hamming, Kiss64Random, AnnoyIndexThreadedBuildPolicy> AnnoyIndexHamming;
+typedef AnnoyIndex<int, double, Euclidean, Kiss64Random, AnnoyIndexThreadedBuildPolicy> AnnoyIndexEuclidean;
+typedef AnnoyIndex<int, double, Manhattan, Kiss64Random, AnnoyIndexThreadedBuildPolicy> AnnoyIndexManhattan;
 
 template<class T, typename F> class RbAnnoyIndex
 {
@@ -55,7 +61,7 @@ template<class T, typename F> class RbAnnoyIndex
       rb_define_alloc_func(rb_cAnnoyIndex, annoy_index_alloc);
       rb_define_method(rb_cAnnoyIndex, "initialize", RUBY_METHOD_FUNC(_annoy_index_init), 1);
       rb_define_method(rb_cAnnoyIndex, "add_item", RUBY_METHOD_FUNC(_annoy_index_add_item), 2);
-      rb_define_method(rb_cAnnoyIndex, "build", RUBY_METHOD_FUNC(_annoy_index_build), 1);
+      rb_define_method(rb_cAnnoyIndex, "build", RUBY_METHOD_FUNC(_annoy_index_build), 2);
       rb_define_method(rb_cAnnoyIndex, "save", RUBY_METHOD_FUNC(_annoy_index_save), 2);
       rb_define_method(rb_cAnnoyIndex, "load", RUBY_METHOD_FUNC(_annoy_index_load), 2);
       rb_define_method(rb_cAnnoyIndex, "unload", RUBY_METHOD_FUNC(_annoy_index_unload), 0);
@@ -110,11 +116,12 @@ template<class T, typename F> class RbAnnoyIndex
       return Qtrue;
     };
 
-    static VALUE _annoy_index_build(VALUE self, VALUE _n_trees) {
+    static VALUE _annoy_index_build(VALUE self, VALUE _n_trees, VALUE _n_jobs) {
       const int n_trees = NUM2INT(_n_trees);
+      const int n_jobs = NUM2INT(_n_jobs);
       char* error;
 
-      if (!get_annoy_index(self)->build(n_trees, &error)) {
+      if (!get_annoy_index(self)->build(n_trees, n_jobs, &error)) {
         rb_raise(rb_eRuntimeError, "%s", error);
         free(error);
         return Qfalse;

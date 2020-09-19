@@ -2,7 +2,7 @@ require 'mkmf'
 
 abort 'libstdc++ is not found.' unless have_library('stdc++')
 
-$CXXFLAGS << " -march=native"
+$CXXFLAGS << " -std=c++14 -march=native -DANNOYLIB_MULTITHREADED_BUILD"
 $INCFLAGS << " -I$(srcdir)/src"
 $VPATH << "$(srcdir)/src"
 
