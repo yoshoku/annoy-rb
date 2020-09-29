@@ -25,6 +25,10 @@ Or install it yourself as:
 
 Note: Annoy.rb does not require the installation of another external library.
 
+## Documentation
+
+* [Annoy.rb API Documentation](https://yoshoku.github.io/annoy.rb/doc/)
+
 ## Usage
 
 ```ruby
