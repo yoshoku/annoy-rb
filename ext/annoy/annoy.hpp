@@ -108,8 +108,9 @@ template<class T, typename F> class RbAnnoyIndex
 
       char* error;
       if (!get_annoy_index(self)->add_item(idx, &vec[0], &error)) {
-        rb_raise(rb_eRuntimeError, "%s", error);
+        VALUE error_str = rb_str_new_cstr(error);
         free(error);
+        rb_raise(rb_eRuntimeError, "%s", StringValuePtr(error_str));
         return Qfalse;
       }
 
@@ -120,13 +121,12 @@ template<class T, typename F> class RbAnnoyIndex
       const int n_trees = NUM2INT(_n_trees);
       const int n_jobs = NUM2INT(_n_jobs);
       char* error;
-
       if (!get_annoy_index(self)->build(n_trees, n_jobs, &error)) {
-        rb_raise(rb_eRuntimeError, "%s", error);
+        VALUE error_str = rb_str_new_cstr(error);
         free(error);
+        rb_raise(rb_eRuntimeError, "%s", StringValuePtr(error_str));
         return Qfalse;
       }
-
       return Qtrue;
     };
 
@@ -134,13 +134,12 @@ template<class T, typename F> class RbAnnoyIndex
       const char* filename = StringValuePtr(_filename);
       const bool prefault = _prefault == Qtrue ? true : false;
       char* error;
-
       if (!get_annoy_index(self)->save(filename, prefault, &error)) {
-        rb_raise(rb_eRuntimeError, "%s", error);
+        VALUE error_str = rb_str_new_cstr(error);
         free(error);
+        rb_raise(rb_eRuntimeError, "%s", StringValuePtr(error_str));
         return Qfalse;
       }
-
       return Qtrue;
     };
 
@@ -148,13 +147,12 @@ template<class T, typename F> class RbAnnoyIndex
       const char* filename = StringValuePtr(_filename);
       const bool prefault = _prefault == Qtrue ? true : false;
       char* error;
-
       if (!get_annoy_index(self)->load(filename, prefault, &error)) {
-        rb_raise(rb_eRuntimeError, "%s", error);
+        VALUE error_str = rb_str_new_cstr(error);
         free(error);
+        rb_raise(rb_eRuntimeError, "%s", StringValuePtr(error_str));
         return Qfalse;
       }
-
       return Qtrue;
     };
 
@@ -279,8 +277,9 @@ template<class T, typename F> class RbAnnoyIndex
       const char* filename = StringValuePtr(_filename);
       char* error;
       if (!get_annoy_index(self)->on_disk_build(filename, &error)) {
-        rb_raise(rb_eRuntimeError, "%s", error);
+        VALUE error_str = rb_str_new_cstr(error);
         free(error);
+        rb_raise(rb_eRuntimeError, "%s", StringValuePtr(error_str));
         return Qfalse;
       }
       return Qtrue;
