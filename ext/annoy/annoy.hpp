@@ -101,19 +101,21 @@ template<class T, typename F> class RbAnnoyIndex
         return Qfalse;
       }
 
-      std::vector<F> vec(n_dims, 0);
+      F* vec = (F*)ruby_xmalloc(n_dims * sizeof(F));
       for (int i = 0; i < n_dims; i++) {
         vec[i] = typeid(F) == typeid(double) ? NUM2DBL(rb_ary_entry(arr, i)) : NUM2UINT(rb_ary_entry(arr, i));
       }
 
       char* error;
-      if (!get_annoy_index(self)->add_item(idx, &vec[0], &error)) {
+      if (!get_annoy_index(self)->add_item(idx, vec, &error)) {
         VALUE error_str = rb_str_new_cstr(error);
         free(error);
+        ruby_xfree(vec);
         rb_raise(rb_eRuntimeError, "%s", StringValuePtr(error_str));
         return Qfalse;
       }
 
+      ruby_xfree(vec);
       return Qtrue;
     };
 
@@ -206,7 +208,7 @@ template<class T, typename F> class RbAnnoyIndex
         return Qfalse;
       }
 
-      std::vector<F> vec(n_dims, 0);
+      F* vec = (F*)ruby_xmalloc(n_dims * sizeof(F));
       for (int i = 0; i < n_dims; i++) {
         vec[i] = typeid(F) == typeid(double) ? NUM2DBL(rb_ary_entry(_vec, i)) : NUM2UINT(rb_ary_entry(_vec, i));
       }
@@ -217,7 +219,9 @@ template<class T, typename F> class RbAnnoyIndex
       std::vector<int> neighbors;
       std::vector<F> distances;
 
-      get_annoy_index(self)->get_nns_by_vector(&vec[0], n_neighbors, search_k, &neighbors, include_distances ? &distances : NULL);
+      get_annoy_index(self)->get_nns_by_vector(vec, n_neighbors, search_k, &neighbors, include_distances ? &distances : NULL);
+
+      ruby_xfree(vec);
 
       const int sz_neighbors = neighbors.size();
       VALUE neighbors_arr = rb_ary_new2(sz_neighbors);
@@ -244,15 +248,16 @@ template<class T, typename F> class RbAnnoyIndex
     static VALUE _annoy_index_get_item(VALUE self, VALUE _idx) {
       const int idx = NUM2INT(_idx);
       const int n_dims = get_annoy_index(self)->get_f();
-      std::vector<F> vec(n_dims, 0);
+      F* vec = (F*)ruby_xmalloc(n_dims * sizeof(F));
       VALUE arr = rb_ary_new2(n_dims);
 
-      get_annoy_index(self)->get_item(idx, &vec[0]);
+      get_annoy_index(self)->get_item(idx, vec);
 
       for (int i = 0; i < n_dims; i++) {
         rb_ary_store(arr, i, typeid(F) == typeid(double) ? DBL2NUM(vec[i]) : UINT2NUM(vec[i]));
       }
 
+      ruby_xfree(vec);
       return arr;
     };
 
