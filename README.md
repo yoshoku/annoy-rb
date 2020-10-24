@@ -1,6 +1,6 @@
 # Annoy.rb
 
-[![Build Status](https://travis-ci.org/yoshoku/annoy.rb.svg?branch=master)](https://travis-ci.org/yoshoku/annoy.rb)
+[![Build Status](https://github.com/yoshoku/annoy.rb/workflows/build/badge.svg)](https://github.com/yoshoku/annoy.rb/actions?query=workflow%3Abuild)
 [![Gem Version](https://badge.fury.io/rb/annoy-rb.svg)](https://badge.fury.io/rb/annoy-rb)
 [![License](https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg)](https://github.com/yoshoku/annoy.rb/blob/master/LICENSE.txt)
 [![Documentation](http://img.shields.io/badge/api-reference-blue.svg)](https://yoshoku.github.io/annoy.rb/doc/)
