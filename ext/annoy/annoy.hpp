@@ -42,17 +42,21 @@ template<class T, typename F> class RbAnnoyIndex
   public:
     static VALUE annoy_index_alloc(VALUE self) {
       T* ptr = (T*)ruby_xmalloc(sizeof(T));
-      return Data_Wrap_Struct(self, NULL, annoy_index_free, ptr);
+      return TypedData_Wrap_Struct(self, &annoy_index_type, ptr);
     };
 
-    static void annoy_index_free(T* ptr) {
-      ptr->~AnnoyIndex();
+    static void annoy_index_free(void* ptr) {
+      ((T*)ptr)->~AnnoyIndex();
       ruby_xfree(ptr);
+    };
+
+    static size_t annoy_index_size(const void* ptr) {
+      return sizeof(*((T*)ptr));
     };
 
     static T* get_annoy_index(VALUE self) {
       T* ptr;
-      Data_Get_Struct(self, T, ptr);
+      TypedData_Get_Struct(self, T, &annoy_index_type, ptr);
       return ptr;
     };
 
@@ -79,6 +83,7 @@ template<class T, typename F> class RbAnnoyIndex
     };
 
   private:
+    static const rb_data_type_t annoy_index_type;
 
     static VALUE _annoy_index_init(VALUE self, VALUE _n_dims) {
       const int n_dims = NUM2INT(_n_dims);
@@ -306,6 +311,19 @@ template<class T, typename F> class RbAnnoyIndex
       const int32_t f = get_annoy_index(self)->get_f();
       return INT2NUM(f);
     };
+};
+
+template<class T, typename F>
+const rb_data_type_t RbAnnoyIndex<T, F>::annoy_index_type = {
+  "RbAnnoyIndex",
+  {
+    NULL,
+    RbAnnoyIndex::annoy_index_free,
+    RbAnnoyIndex::annoy_index_size
+  },
+  NULL,
+  NULL,
+  RUBY_TYPED_FREE_IMMEDIATELY
 };
 
 #endif /* ANNOY_HPP */
