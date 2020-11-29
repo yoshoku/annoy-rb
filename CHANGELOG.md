@@ -1,3 +1,6 @@
+## 0.2.2
+- Replace Data_ functions to TypedData_ functions.
+
 ## 0.2.1
 - Fix to free char array of error message before calling rb_raise.
 - Fix to use array allocated with ruby_xmalloc instead of vector class in C++.
