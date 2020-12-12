@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
 
   spec.metadata['homepage_uri'] = spec.homepage
   spec.metadata['source_code_uri'] = spec.homepage
-  spec.metadata['changelog_uri'] = 'https://github.com/yoshoku/annoy.rb/blob/master/CHANGELOG.md'
+  spec.metadata['changelog_uri'] = 'https://github.com/yoshoku/annoy.rb/blob/main/CHANGELOG.md'
   spec.metadata['documentation_uri'] = 'https://yoshoku.github.io/annoy.rb/doc/'
 
   # Specify which files should be added to the gem when it is released.
