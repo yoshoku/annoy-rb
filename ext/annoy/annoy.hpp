@@ -147,6 +147,7 @@ template<class T, typename F> class RbAnnoyIndex
         rb_raise(rb_eRuntimeError, "%s", StringValuePtr(error_str));
         return Qfalse;
       }
+      RB_GC_GUARD(_filename);
       return Qtrue;
     };
 
@@ -160,6 +161,7 @@ template<class T, typename F> class RbAnnoyIndex
         rb_raise(rb_eRuntimeError, "%s", StringValuePtr(error_str));
         return Qfalse;
       }
+      RB_GC_GUARD(_filename);
       return Qtrue;
     };
 
@@ -292,6 +294,7 @@ template<class T, typename F> class RbAnnoyIndex
         rb_raise(rb_eRuntimeError, "%s", StringValuePtr(error_str));
         return Qfalse;
       }
+      RB_GC_GUARD(_filename);
       return Qtrue;
     };
 
