@@ -1,3 +1,6 @@
+## 0.2.3
+- Add GC guard to index saving and loading methods.
+
 ## 0.2.2
 - Replace Data_ functions to TypedData_ functions.
 
