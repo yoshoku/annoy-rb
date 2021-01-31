@@ -3,6 +3,11 @@
 require 'bundler/setup'
 require 'annoy'
 
+if defined?(GC.verify_compaction_references) == 'method'
+  # Calling this method will help to find object movement bugs.
+  GC.verify_compaction_references(double_heap: true, toward: :empty)
+end
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = '.rspec_status'
