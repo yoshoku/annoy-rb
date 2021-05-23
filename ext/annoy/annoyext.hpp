@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 
-#ifndef ANNOY_HPP
-#define ANNOY_HPP 1
+#ifndef ANNOYEXT_HPP
+#define ANNOYEXT_HPP 1
 
 #include <typeinfo>
 
@@ -329,4 +329,4 @@ const rb_data_type_t RbAnnoyIndex<T, F>::annoy_index_type = {
   RUBY_TYPED_FREE_IMMEDIATELY
 };
 
-#endif /* ANNOY_HPP */
+#endif /* ANNOYEXT_HPP */

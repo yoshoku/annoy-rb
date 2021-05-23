@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'annoy/version'
-require 'annoy/annoy'
+require 'annoy/annoyext'
 
 module Annoy
   # AnnoyIndex is a class that provides functions for k-nearest neighbors search.

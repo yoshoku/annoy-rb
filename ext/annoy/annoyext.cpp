@@ -16,10 +16,10 @@
  * limitations under the License.
  */
 
-#include "annoy.hpp"
+#include "annoyext.hpp"
 
 extern "C"
-void Init_annoy(void)
+void Init_annoyext(void)
 {
   VALUE rb_mAnnoy = rb_define_module("Annoy");
   RbAnnoyIndex<AnnoyIndexAngular, double>::define_class(rb_mAnnoy, "AnnoyIndexAngular");
