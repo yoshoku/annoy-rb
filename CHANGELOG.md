@@ -1,3 +1,8 @@
+## 0.3.0
+- Add type declaration file: sig/annoy.rbs
+- Fix get_distance method to return integer typed value on hamming metric index.
+- Rename native extension files.
+
 ## 0.2.3
 - Add GC guard to index saving and loading methods.
 
