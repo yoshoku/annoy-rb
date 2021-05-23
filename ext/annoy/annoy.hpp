@@ -271,8 +271,8 @@ template<class T, typename F> class RbAnnoyIndex
     static VALUE _annoy_index_get_distance(VALUE self, VALUE _i, VALUE _j) {
       const int i = NUM2INT(_i);
       const int j = NUM2INT(_j);
-      const double dist = get_annoy_index(self)->get_distance(i, j);
-      return DBL2NUM(dist);
+      const F dist = get_annoy_index(self)->get_distance(i, j);
+      return typeid(F) == typeid(double) ? DBL2NUM(dist) : UINT2NUM(dist);
     };
 
     static VALUE _annoy_index_get_n_items(VALUE self) {
