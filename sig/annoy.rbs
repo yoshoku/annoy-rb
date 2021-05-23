@@ -1,0 +1,114 @@
+module Annoy
+  VERSION: String
+
+  class AnnoyIndex
+    attr_reader n_features: Integer
+    attr_reader metric: String
+
+    def initialize: (n_features: Integer n_features, ?metric: String metric) -> void
+    def add_item: (Integer i, Array[Float | Integer] v) -> bool
+    def build: (Integer n_trees, ?n_jobs: Integer n_jobs) -> bool
+    def save: (String filename, ?prefault: bool prefault) -> bool
+    def load: (String filename, ?prefault: bool prefault) -> bool
+    def unload: () -> bool
+    def get_nns_by_item: (Integer i, Integer n, ?search_k: Integer search_k, ?include_distances: (true | false) include_distances) -> ([Array[Integer], Array[Float | Integer]] | Array[Integer])
+    def get_nns_by_vector: (Array[Float | Integer] v, Integer n, ?search_k: Integer search_k, ?include_distances: (true | false) include_distances) -> ([Array[Integer], Array[Float | Integer]] | Array[Integer])
+    def get_item: (Integer i) -> Array[Float | Integer]
+    def get_distance: (Integer i, Integer j) -> (Float | Integer)
+    def n_items: () -> Integer
+    def n_trees: () -> Integer
+    def on_disk_build: (String filename) -> bool
+    def verbose: (bool flag) -> nil
+    def seed: (Integer s) -> nil
+  end
+
+  class AnnoyIndexAngular
+    def initialize: (Integer n_features) -> void
+    def add_item: (Integer i, Array[Float] v) -> bool
+    def build: (Integer n_trees, Integer n_jobs) -> bool
+    def save: (String filename, bool prefault) -> bool
+    def load: (String filename, bool prefault) -> bool
+    def unload: () -> bool
+    def get_nns_by_item: (Integer i, Integer n, Integer search_k, (true | false) include_distances) -> ([Array[Integer], Array[Float]] | Array[Integer])
+    def get_nns_by_vector: (Array[Float] v, Integer n, Integer search_k, (true | false) include_distances) -> ([Array[Integer], Array[Float]] | Array[Integer])
+    def get_item: (Integer i) -> Array[Float]
+    def get_distance: (Integer i, Integer j) -> Float
+    def n_items: () -> Integer
+    def n_trees: () -> Integer
+    def on_disk_build: (String filename) -> bool
+    def verbose: (bool flag) -> nil
+    def seed: (Integer s) -> nil
+  end
+
+  class AnnoyIndexDotProduct
+    def initialize: (Integer n_features) -> void
+    def add_item: (Integer i, Array[Float] v) -> bool
+    def build: (Integer n_trees, Integer n_jobs) -> bool
+    def save: (String filename, bool prefault) -> bool
+    def load: (String filename, bool prefault) -> bool
+    def unload: () -> bool
+    def get_nns_by_item: (Integer i, Integer n, Integer search_k, (true | false) include_distances) -> ([Array[Integer], Array[Float]] | Array[Integer])
+    def get_nns_by_vector: (Array[Float] v, Integer n, Integer search_k, (true | false) include_distances) -> ([Array[Integer], Array[Float]] | Array[Integer])
+    def get_item: (Integer i) -> Array[Float]
+    def get_distance: (Integer i, Integer j) -> Float
+    def n_items: () -> Integer
+    def n_trees: () -> Integer
+    def on_disk_build: (String filename) -> bool
+    def verbose: (bool flag) -> nil
+    def seed: (Integer s) -> nil
+  end
+
+  class AnnoyIndexHamming
+    def initialize: (Integer n_features) -> void
+    def add_item: (Integer i, Array[Integer] v) -> bool
+    def build: (Integer n_trees, Integer n_jobs) -> bool
+    def save: (String filename, bool prefault) -> bool
+    def load: (String filename, bool prefault) -> bool
+    def unload: () -> bool
+    def get_nns_by_item: (Integer i, Integer n, Integer search_k, (true | false) include_distances) -> ([Array[Integer], Array[Integer]] | Array[Integer])
+    def get_nns_by_vector: (Array[Integer] v, Integer n, Integer search_k, (true | false) include_distances) -> ([Array[Integer], Array[Integer]] | Array[Integer])
+    def get_item: (Integer i) -> Array[Integer]
+    def get_distance: (Integer i, Integer j) -> Integer
+    def n_items: () -> Integer
+    def n_trees: () -> Integer
+    def on_disk_build: (String filename) -> bool
+    def verbose: (bool flag) -> nil
+    def seed: (Integer s) -> nil
+  end
+
+  class AnnoyIndexEuclidean
+    def initialize: (Integer n_features) -> void
+    def add_item: (Integer i, Array[Float] v) -> bool
+    def build: (Integer n_trees, Integer n_jobs) -> bool
+    def save: (String filename, bool prefault) -> bool
+    def load: (String filename, bool prefault) -> bool
+    def unload: () -> bool
+    def get_nns_by_item: (Integer i, Integer n, Integer search_k, (true | false) include_distances) -> ([Array[Integer], Array[Float]] | Array[Integer])
+    def get_nns_by_vector: (Array[Float] v, Integer n, Integer search_k, (true | false) include_distances) -> ([Array[Integer], Array[Float]] | Array[Integer])
+    def get_item: (Integer i) -> Array[Float]
+    def get_distance: (Integer i, Integer j) -> Float
+    def n_items: () -> Integer
+    def n_trees: () -> Integer
+    def on_disk_build: (String filename) -> bool
+    def verbose: (bool flag) -> nil
+    def seed: (Integer s) -> nil
+  end
+
+  class AnnoyIndexManhattan
+    def initialize: (Integer n_features) -> void
+    def add_item: (Integer i, Array[Float] v) -> bool
+    def build: (Integer n_trees, Integer n_jobs) -> bool
+    def save: (String filename, bool prefault) -> bool
+    def load: (String filename, bool prefault) -> bool
+    def unload: () -> bool
+    def get_nns_by_item: (Integer i, Integer n, Integer search_k, (true | false) include_distances) -> ([Array[Integer], Array[Float]] | Array[Integer])
+    def get_nns_by_vector: (Array[Float] v, Integer n, Integer search_k, (true | false) include_distances) -> ([Array[Integer], Array[Float]] | Array[Integer])
+    def get_item: (Integer i) -> Array[Float]
+    def get_distance: (Integer i, Integer j) -> Float
+    def n_items: () -> Integer
+    def n_trees: () -> Integer
+    def on_disk_build: (String filename) -> bool
+    def verbose: (bool flag) -> nil
+    def seed: (Integer s) -> nil
+  end
+end
