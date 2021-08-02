@@ -42,6 +42,7 @@ template<class T, typename F> class RbAnnoyIndex
   public:
     static VALUE annoy_index_alloc(VALUE self) {
       T* ptr = (T*)ruby_xmalloc(sizeof(T));
+      new (ptr) T();
       return TypedData_Wrap_Struct(self, &annoy_index_type, ptr);
     };
 
