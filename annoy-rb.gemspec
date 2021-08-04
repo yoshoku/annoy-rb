@@ -6,8 +6,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['yoshoku']
   spec.email         = ['yoshoku@outlook.com']
 
-  spec.summary       = 'Ruby binding for the Annoy (Approximate Nearest Neighbors Oh Yeah).'
-  spec.description   = 'Annoy.rb is a Ruby binding for the Annoy (Approximate Nearest Neighbors Oh Yeah).'
+  spec.summary       = 'Ruby bindings for the Annoy (Approximate Nearest Neighbors Oh Yeah).'
+  spec.description   = 'Annoy.rb provides Ruby bindings for the Annoy (Approximate Nearest Neighbors Oh Yeah).'
   spec.homepage      = 'https://github.com/yoshoku/annoy.rb'
   spec.license       = 'Apache-2.0'
 
