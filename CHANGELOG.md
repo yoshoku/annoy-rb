@@ -1,3 +1,6 @@
+## 0.4.0
+- Add dummy constructor call at memory allocation of binding class to prevent occuring segment fault on GC when initialize method is failed.
+
 ## 0.3.0
 - Add type declaration file: sig/annoy.rbs
 - Fix get_distance method to return integer typed value on hamming metric index.
