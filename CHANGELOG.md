@@ -1,3 +1,17 @@
+## 0.5.0
+### Breaking change
+- Remove `-march=native` and `-DANNOYLIB_MULTITHREADED_BUILD` from CXXFLAGS.
+For example, the installation command to reproduce the same build as the previous version is as follows:
+
+```
+$ gem install annoy-rb -- --with-cxxflags=-march=native -DANNOYLIB_MULTITHREADED_BUILD
+```
+
+```
+$ bundle config --local build.annoy-rb "--with-cxxflags=-march=native -DANNOYLIB_MULTITHREADED_BUILD"
+$ bundle install
+```
+
 ## 0.4.0
 - Add dummy constructor call at memory allocation of binding class to prevent occuring segment fault on GC when initialize method is failed.
 
