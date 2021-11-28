@@ -69,6 +69,7 @@ module Annoy
     #
     # @param n_trees [Integer] The number of trees. More trees gives higher search precision.
     # @param n_jobs [Integer] The number of threads used to build the trees. If -1 is given, uses all available CPU cores.
+    # This parameter is enabled only if "-DANNOYLIB_MULTITHREADED_BUILD" is specified on gem installation.
     # @return [Boolean]
     def build(n_trees, n_jobs: -1)
       @index.build(n_trees, n_jobs)
