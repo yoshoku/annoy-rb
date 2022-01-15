@@ -58,4 +58,4 @@ The gem is available as open source under the terms of the [Apache-2.0 License](
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/yoshoku/annoy.rb.
 This project is intended to be a safe, welcoming space for collaboration,
-and contributors are expected to adhere to the [code of conduct](https://github.com/yoshoku/annoy.rb/blob/main/CODE_OF_CONDUCT.md).
+and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
