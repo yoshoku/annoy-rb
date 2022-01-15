@@ -1,0 +1,14 @@
+{
+  "name": "annoy.rb",
+  "repository": "git@github.com:yoshoku/annoy.rb.git",
+  "author": "Atsushi Tatsuma <yoshoku@outlook.com>",
+  "license": "Apache-2.0",
+  "scripts": {
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^16.0.2",
+    "@commitlint/config-conventional": "^16.0.0",
+    "husky": "^7.0.4"
+  }
+}

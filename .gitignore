@@ -6,6 +6,7 @@
 /pkg/
 /spec/reports/
 /tmp/
+/node_modules/
 *.bundle
 *.so
 *.o
@@ -15,6 +16,7 @@ mkmf.log
 # rspec failure tracking
 .rspec_status
 
+*.lock
 *.swp
 *.dat
 tags
