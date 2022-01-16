@@ -31,11 +31,11 @@
   typedef AnnoyIndexSingleThreadedBuildPolicy AnnoyIndexThreadedBuildPolicy;
 #endif
 
-typedef AnnoyIndex<int32_t, double, Angular, Kiss64Random, AnnoyIndexThreadedBuildPolicy> AnnoyIndexAngular;
-typedef AnnoyIndex<int32_t, double, DotProduct, Kiss64Random, AnnoyIndexThreadedBuildPolicy> AnnoyIndexDotProduct;
-typedef AnnoyIndex<int32_t, uint64_t, Hamming, Kiss64Random, AnnoyIndexThreadedBuildPolicy> AnnoyIndexHamming;
-typedef AnnoyIndex<int32_t, double, Euclidean, Kiss64Random, AnnoyIndexThreadedBuildPolicy> AnnoyIndexEuclidean;
-typedef AnnoyIndex<int32_t, double, Manhattan, Kiss64Random, AnnoyIndexThreadedBuildPolicy> AnnoyIndexManhattan;
+template<typename F> using AnnoyIndexAngular = AnnoyIndex<int32_t, F, Angular, Kiss64Random, AnnoyIndexThreadedBuildPolicy>;
+template<typename F> using AnnoyIndexDotProduct = AnnoyIndex<int32_t, F, DotProduct, Kiss64Random, AnnoyIndexThreadedBuildPolicy>;
+template<typename F> using AnnoyIndexHamming = AnnoyIndex<int32_t, F, Hamming, Kiss64Random, AnnoyIndexThreadedBuildPolicy>;
+template<typename F> using AnnoyIndexEuclidean = AnnoyIndex<int32_t, F, Euclidean, Kiss64Random, AnnoyIndexThreadedBuildPolicy>;
+template<typename F> using AnnoyIndexManhattan = AnnoyIndex<int32_t, F, Manhattan, Kiss64Random, AnnoyIndexThreadedBuildPolicy>;
 
 template<class T, typename F> class RbAnnoyIndex
 {

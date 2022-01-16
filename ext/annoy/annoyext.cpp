@@ -22,9 +22,9 @@ extern "C"
 void Init_annoyext(void)
 {
   VALUE rb_mAnnoy = rb_define_module("Annoy");
-  RbAnnoyIndex<AnnoyIndexAngular, double>::define_class(rb_mAnnoy, "AnnoyIndexAngular");
-  RbAnnoyIndex<AnnoyIndexDotProduct, double>::define_class(rb_mAnnoy, "AnnoyIndexDotProduct");
-  RbAnnoyIndex<AnnoyIndexHamming, uint64_t>::define_class(rb_mAnnoy, "AnnoyIndexHamming");
-  RbAnnoyIndex<AnnoyIndexEuclidean, double>::define_class(rb_mAnnoy, "AnnoyIndexEuclidean");
-  RbAnnoyIndex<AnnoyIndexManhattan, double>::define_class(rb_mAnnoy, "AnnoyIndexManhattan");
+  RbAnnoyIndex<AnnoyIndexAngular<double>, double>::define_class(rb_mAnnoy, "AnnoyIndexAngular");
+  RbAnnoyIndex<AnnoyIndexDotProduct<double>, double>::define_class(rb_mAnnoy, "AnnoyIndexDotProduct");
+  RbAnnoyIndex<AnnoyIndexHamming<uint64_t>, uint64_t>::define_class(rb_mAnnoy, "AnnoyIndexHamming");
+  RbAnnoyIndex<AnnoyIndexEuclidean<double>, double>::define_class(rb_mAnnoy, "AnnoyIndexEuclidean");
+  RbAnnoyIndex<AnnoyIndexManhattan<double>, double>::define_class(rb_mAnnoy, "AnnoyIndexManhattan");
 }
