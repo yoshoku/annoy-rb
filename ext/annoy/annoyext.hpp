@@ -31,11 +31,11 @@
   typedef AnnoyIndexSingleThreadedBuildPolicy AnnoyIndexThreadedBuildPolicy;
 #endif
 
-typedef AnnoyIndex<int, double, Angular, Kiss64Random, AnnoyIndexThreadedBuildPolicy> AnnoyIndexAngular;
-typedef AnnoyIndex<int, double, DotProduct, Kiss64Random, AnnoyIndexThreadedBuildPolicy> AnnoyIndexDotProduct;
-typedef AnnoyIndex<int, uint64_t, Hamming, Kiss64Random, AnnoyIndexThreadedBuildPolicy> AnnoyIndexHamming;
-typedef AnnoyIndex<int, double, Euclidean, Kiss64Random, AnnoyIndexThreadedBuildPolicy> AnnoyIndexEuclidean;
-typedef AnnoyIndex<int, double, Manhattan, Kiss64Random, AnnoyIndexThreadedBuildPolicy> AnnoyIndexManhattan;
+typedef AnnoyIndex<int32_t, double, Angular, Kiss64Random, AnnoyIndexThreadedBuildPolicy> AnnoyIndexAngular;
+typedef AnnoyIndex<int32_t, double, DotProduct, Kiss64Random, AnnoyIndexThreadedBuildPolicy> AnnoyIndexDotProduct;
+typedef AnnoyIndex<int32_t, uint64_t, Hamming, Kiss64Random, AnnoyIndexThreadedBuildPolicy> AnnoyIndexHamming;
+typedef AnnoyIndex<int32_t, double, Euclidean, Kiss64Random, AnnoyIndexThreadedBuildPolicy> AnnoyIndexEuclidean;
+typedef AnnoyIndex<int32_t, double, Manhattan, Kiss64Random, AnnoyIndexThreadedBuildPolicy> AnnoyIndexManhattan;
 
 template<class T, typename F> class RbAnnoyIndex
 {
@@ -94,7 +94,7 @@ template<class T, typename F> class RbAnnoyIndex
     };
 
     static VALUE _annoy_index_add_item(VALUE self, VALUE _idx, VALUE arr) {
-      const int idx = NUM2INT(_idx);
+      const int32_t idx = (int32_t)NUM2INT(_idx);
       const int n_dims = get_annoy_index(self)->get_f();
 
       if (!RB_TYPE_P(arr, T_ARRAY)) {
@@ -172,11 +172,11 @@ template<class T, typename F> class RbAnnoyIndex
     };
 
     static VALUE _annoy_index_get_nns_by_item(VALUE self, VALUE _idx, VALUE _n_neighbors, VALUE _search_k, VALUE _include_distances) {
-      const int idx = NUM2INT(_idx);
+      const int32_t idx = (int32_t)NUM2INT(_idx);
       const int n_neighbors = NUM2INT(_n_neighbors);
       const int search_k = NUM2INT(_search_k);
       const bool include_distances = _include_distances == Qtrue ? true : false;
-      std::vector<int> neighbors;
+      std::vector<int32_t> neighbors;
       std::vector<F> distances;
 
       get_annoy_index(self)->get_nns_by_item(idx, n_neighbors, search_k, &neighbors, include_distances ? &distances : NULL);
@@ -185,7 +185,7 @@ template<class T, typename F> class RbAnnoyIndex
       VALUE neighbors_arr = rb_ary_new2(sz_neighbors);
 
       for (int i = 0; i < sz_neighbors; i++) {
-        rb_ary_store(neighbors_arr, i, INT2NUM(neighbors[i]));
+        rb_ary_store(neighbors_arr, i, INT2NUM((int)(neighbors[i])));
       }
 
       if (include_distances) {
@@ -224,7 +224,7 @@ template<class T, typename F> class RbAnnoyIndex
       const int n_neighbors = NUM2INT(_n_neighbors);
       const int search_k = NUM2INT(_search_k);
       const bool include_distances = _include_distances == Qtrue ? true : false;
-      std::vector<int> neighbors;
+      std::vector<int32_t> neighbors;
       std::vector<F> distances;
 
       get_annoy_index(self)->get_nns_by_vector(vec, n_neighbors, search_k, &neighbors, include_distances ? &distances : NULL);
@@ -235,7 +235,7 @@ template<class T, typename F> class RbAnnoyIndex
       VALUE neighbors_arr = rb_ary_new2(sz_neighbors);
 
       for (int i = 0; i < sz_neighbors; i++) {
-        rb_ary_store(neighbors_arr, i, INT2NUM(neighbors[i]));
+        rb_ary_store(neighbors_arr, i, INT2NUM((int)(neighbors[i])));
       }
 
       if (include_distances) {
@@ -254,7 +254,7 @@ template<class T, typename F> class RbAnnoyIndex
     };
 
     static VALUE _annoy_index_get_item(VALUE self, VALUE _idx) {
-      const int idx = NUM2INT(_idx);
+      const int32_t idx = (int32_t)NUM2INT(_idx);
       const int n_dims = get_annoy_index(self)->get_f();
       F* vec = (F*)ruby_xmalloc(n_dims * sizeof(F));
       VALUE arr = rb_ary_new2(n_dims);
@@ -270,8 +270,8 @@ template<class T, typename F> class RbAnnoyIndex
     };
 
     static VALUE _annoy_index_get_distance(VALUE self, VALUE _i, VALUE _j) {
-      const int i = NUM2INT(_i);
-      const int j = NUM2INT(_j);
+      const int32_t i = (int32_t)NUM2INT(_i);
+      const int32_t j = (int32_t)NUM2INT(_j);
       const F dist = get_annoy_index(self)->get_distance(i, j);
       return typeid(F) == typeid(double) ? DBL2NUM(dist) : UINT2NUM(dist);
     };
