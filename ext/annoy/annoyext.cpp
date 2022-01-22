@@ -27,4 +27,9 @@ void Init_annoyext(void)
   RbAnnoyIndex<AnnoyIndexHamming<uint64_t>, uint64_t>::define_class(rb_mAnnoy, "AnnoyIndexHamming");
   RbAnnoyIndex<AnnoyIndexEuclidean<double>, double>::define_class(rb_mAnnoy, "AnnoyIndexEuclidean");
   RbAnnoyIndex<AnnoyIndexManhattan<double>, double>::define_class(rb_mAnnoy, "AnnoyIndexManhattan");
+
+  RbAnnoyIndex<AnnoyIndexAngular<float>, float>::define_class(rb_mAnnoy, "AnnoyIndexAngularFloat32");
+  RbAnnoyIndex<AnnoyIndexDotProduct<float>, float>::define_class(rb_mAnnoy, "AnnoyIndexDotProductFloat32");
+  RbAnnoyIndex<AnnoyIndexEuclidean<float>, float>::define_class(rb_mAnnoy, "AnnoyIndexEuclideanFloat32");
+  RbAnnoyIndex<AnnoyIndexManhattan<float>, float>::define_class(rb_mAnnoy, "AnnoyIndexManhattanFloat32");
 }

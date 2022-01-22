@@ -8,10 +8,11 @@ RSpec.describe Annoy do
   describe Annoy::AnnoyIndex do
     let(:n_features) { 4 }
     let(:metric) { 'manhattan' }
+    let(:dtype) { 'float64' }
     let(:n_trees) { 3 }
     let(:n_items) { 5 }
     let(:n_neighbors) { 3 }
-    let(:index) { Annoy::AnnoyIndex.new(n_features: n_features, metric: metric) }
+    let(:index) { Annoy::AnnoyIndex.new(n_features: n_features, metric: metric, dtype: dtype) }
 
     before do
       index.seed(1)
@@ -21,6 +22,64 @@ RSpec.describe Annoy do
       index.add_item(3, [2, 1, 2, 5])
       index.add_item(4, [2, 1, 2, 6])
       index.build(n_trees)
+    end
+
+    describe 'Index instance' do
+      subject { index.instance_variable_get(:@index) }
+
+      context "when metric is 'angular'" do
+        let(:metric) { 'angular' }
+
+        it { is_expected.to be_a(Annoy::AnnoyIndexAngular) }
+
+        context 'with float32 data type' do
+          let(:dtype) { 'float32' }
+
+          it { is_expected.to be_a(Annoy::AnnoyIndexAngularFloat32) }
+        end
+      end
+
+      context "when metric is 'dot'" do
+        let(:metric) { 'dot' }
+
+        it { is_expected.to be_a(Annoy::AnnoyIndexDotProduct) }
+
+        context 'with float32 data type' do
+          let(:dtype) { 'float32' }
+
+          it { is_expected.to be_a(Annoy::AnnoyIndexDotProductFloat32) }
+        end
+      end
+
+      context "when metric is 'hamming'" do
+        let(:metric) { 'hamming' }
+
+        it { is_expected.to be_a(Annoy::AnnoyIndexHamming) }
+      end
+
+      context "when metric is 'euclidean'" do
+        let(:metric) { 'euclidean' }
+
+        it { is_expected.to be_a(Annoy::AnnoyIndexEuclidean) }
+
+        context 'with float32 data type' do
+          let(:dtype) { 'float32' }
+
+          it { is_expected.to be_a(Annoy::AnnoyIndexEuclideanFloat32) }
+        end
+      end
+
+      context "when metric is 'manhattan'" do
+        let(:metric) { 'manhattan' }
+
+        it { is_expected.to be_a(Annoy::AnnoyIndexManhattan) }
+
+        context 'with float32 data type' do
+          let(:dtype) { 'float32' }
+
+          it { is_expected.to be_a(Annoy::AnnoyIndexManhattanFloat32) }
+        end
+      end
     end
 
     describe '#get_nns_by_item' do
@@ -82,6 +141,14 @@ RSpec.describe Annoy do
 
       it 'returns the distance metric' do
         expect(subject).to eq(metric)
+      end
+    end
+
+    describe '#dtype' do
+      subject { index.dtype }
+
+      it 'returns the data type of feature' do
+        expect(subject).to eq(dtype)
       end
     end
 

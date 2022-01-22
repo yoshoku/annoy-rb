@@ -30,27 +30,35 @@ module Annoy
     # @return [String]
     attr_reader :metric
 
+    # Returns the data type of feature.
+    # @return [String]
+    attr_reader :dtype
+
     # Create a new search index.
     #
     # @param n_features [Integer] The number of features (dimensions) of stored vector.
     # @param metric [String] The distance metric between vectors ('angular', 'dot', 'hamming', 'euclidean', or 'manhattan').
-    def initialize(n_features:, metric: 'angular')
+    # @param dtype [String] The data type of features ('float64' and 'float32').
+    #   If metric is given 'hamming', 'uint64' is automatically assigned to this argument.
+    def initialize(n_features:, metric: 'angular', dtype: 'float64')
       raise ArgumentError, 'Expect n_features to be Integer.' unless n_features.is_a?(Numeric)
 
       @n_features = n_features.to_i
       @metric = metric
+      @dtype = dtype
 
       @index = case @metric
                when 'angular'
-                 AnnoyIndexAngular.new(@n_features)
+                 @dtype == 'float64' ? AnnoyIndexAngular.new(@n_features) : AnnoyIndexAngularFloat32.new(@n_features)
                when 'dot'
-                 AnnoyIndexDotProduct.new(@n_features)
+                 @dtype == 'float64' ? AnnoyIndexDotProduct.new(@n_features) : AnnoyIndexDotProductFloat32.new(@n_features)
                when 'hamming'
+                 @dtype = 'uint64'
                  AnnoyIndexHamming.new(@n_features)
                when 'euclidean'
-                 AnnoyIndexEuclidean.new(@n_features)
+                 @dtype == 'float64' ? AnnoyIndexEuclidean.new(@n_features) : AnnoyIndexEuclideanFloat32.new(@n_features)
                when 'manhattan'
-                 AnnoyIndexManhattan.new(@n_features)
+                 @dtype == 'float64' ? AnnoyIndexManhattan.new(@n_features) : AnnoyIndexManhattanFloat32.new(@n_features)
                else
                  raise ArgumentError, "No such metric: #{@metric}."
                end
