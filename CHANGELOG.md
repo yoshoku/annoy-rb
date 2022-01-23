@@ -1,3 +1,19 @@
+## 0.6.0
+- Add `dtype` argument to initialize method to specify the data type of vector element.
+If you want to load a search index created with the Python bindings, specify 'float32' to the dtype argument.
+
+```
+require 'annoy'
+
+f = 40
+t = Annoy::AnnoyIndex.new(n_features: f, metric: 'angular', dtype: 'float32')
+t.load('index_with_python_bindings.ann')
+```
+
+- Change the data type of item index from int to int32_t.
+- Update type declarations and documentations.
+- Introduce conventional commits.
+
 ## 0.5.0
 ### Breaking change
 - Remove `-march=native` and `-DANNOYLIB_MULTITHREADED_BUILD` from CXXFLAGS.
