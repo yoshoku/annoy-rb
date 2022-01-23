@@ -50,6 +50,18 @@ u.load('test.ann')
 p u.get_nns_by_item(0, 100) # will find the 100 nearest neighbors.
 ```
 
+With the default argument, annoy.rb uses double precision floating point type for the data type of vector element.
+On the other hand, the [Python bindings of Annoy](https://pypi.org/project/annoy/) use single precision floating point type.
+If you want to load a search index created with the Python bindings, specify 'float32' to the dtype argument.
+
+```ruby
+require 'annoy'
+
+f = 40
+t = Annoy::AnnoyIndex.new(n_features: f, metric: 'angular', dtype: 'float32')
+t.load('index_with_python_bindings.ann')
+```
+
 ## License
 
 The gem is available as open source under the terms of the [Apache-2.0 License](https://www.apache.org/licenses/LICENSE-2.0).
