@@ -169,16 +169,43 @@ RSpec.describe Annoy do
     end
 
     describe '#save and #load' do
-      let(:filename) { File.expand_path(__dir__ + '/test.ann') }
+      context 'with an index created by annoy.rb' do
+        let(:filename) { File.expand_path("#{__dir__}/test.ann") }
 
-      before { index.save(filename) }
+        before { index.save(filename) }
 
-      it 'load the saved index', :aggregate_failures do
-        loaded = Annoy::AnnoyIndex.new(n_features: n_features, metric: metric)
-        loaded.load(filename)
-        expect(loaded.n_items).to eq(index.n_items)
-        expect(loaded.n_trees).to eq(index.n_trees)
-        expect(loaded.get_item(0)).to match(index.get_item(0))
+        it 'loads the saved index', :aggregate_failures do
+          loaded = Annoy::AnnoyIndex.new(n_features: n_features, metric: metric)
+          loaded.load(filename)
+          expect(loaded.n_items).to eq(index.n_items)
+          expect(loaded.n_trees).to eq(index.n_trees)
+          expect(loaded.get_item(0)).to match(index.get_item(0))
+        end
+      end
+
+      context 'with an index created by the Python bindings' do
+        # from annoy import AnnoyIndex
+        #
+        # t = AnnoyIndex(4, 'angular')
+        # t.add_item(0, [1, 2, 3, 4])
+        # t.add_item(1, [5, 6, 7, 8])
+        # t.add_item(2, [9, 0, 1, 2])
+        # t.add_item(3, [3, 4, 5, 6])
+        # t.add_item(4, [7, 8, 9, 0])
+        # t.build(5)
+        # t.save('pytest.ann')
+        let(:filename) { File.expand_path("#{__dir__}/pytest.ann") }
+
+        it 'loads the saved index', :aggregate_failures do
+          loaded = Annoy::AnnoyIndex.new(n_features: 4, metric: 'angular', dtype: 'float32')
+          loaded.load(filename)
+          expect(loaded.n_items).to eq(5)
+          expect(loaded.get_item(0)).to eq([1, 2, 3, 4])
+          expect(loaded.get_item(1)).to eq([5, 6, 7, 8])
+          expect(loaded.get_item(2)).to eq([9, 0, 1, 2])
+          expect(loaded.get_item(3)).to eq([3, 4, 5, 6])
+          expect(loaded.get_item(4)).to eq([7, 8, 9, 0])
+        end
       end
     end
 
