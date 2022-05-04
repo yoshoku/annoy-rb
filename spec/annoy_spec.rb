@@ -12,7 +12,7 @@ RSpec.describe Annoy do
     let(:n_trees) { 3 }
     let(:n_items) { 5 }
     let(:n_neighbors) { 3 }
-    let(:index) { Annoy::AnnoyIndex.new(n_features: n_features, metric: metric, dtype: dtype) }
+    let(:index) { described_class.new(n_features: n_features, metric: metric, dtype: dtype) }
 
     before do
       index.seed(1)
@@ -175,7 +175,7 @@ RSpec.describe Annoy do
         before { index.save(filename) }
 
         it 'loads the saved index', :aggregate_failures do
-          loaded = Annoy::AnnoyIndex.new(n_features: n_features, metric: metric)
+          loaded = described_class.new(n_features: n_features, metric: metric)
           loaded.load(filename)
           expect(loaded.n_items).to eq(index.n_items)
           expect(loaded.n_trees).to eq(index.n_trees)
@@ -197,7 +197,7 @@ RSpec.describe Annoy do
         let(:filename) { File.expand_path("#{__dir__}/pytest.ann") }
 
         it 'loads the saved index', :aggregate_failures do
-          loaded = Annoy::AnnoyIndex.new(n_features: 4, metric: 'angular', dtype: 'float32')
+          loaded = described_class.new(n_features: 4, metric: 'angular', dtype: 'float32')
           loaded.load(filename)
           expect(loaded.n_items).to eq(5)
           expect(loaded.get_item(0)).to eq([1, 2, 3, 4])
