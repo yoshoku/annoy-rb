@@ -5,6 +5,10 @@ require 'rspec/core/rake_task'
 
 RSpec::Core::RakeTask.new(:spec)
 
+require 'rubocop/rake_task'
+
+RuboCop::RakeTask.new
+
 require 'rake/extensiontask'
 
 task build: :compile # rubocop:disable Rake/Desc
@@ -14,4 +18,4 @@ Rake::ExtensionTask.new('annoyext') do |ext|
   ext.lib_dir = 'lib/annoy'
 end
 
-task default: %i[clobber compile spec]
+task default: %i[clobber compile rubocop spec]
