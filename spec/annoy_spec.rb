@@ -2,7 +2,7 @@
 
 RSpec.describe Annoy do
   it 'has a version number' do
-    expect(Annoy::VERSION).not_to be nil
+    expect(Annoy::VERSION).not_to be_nil
   end
 
   describe Annoy::AnnoyIndex do
