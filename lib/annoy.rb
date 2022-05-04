@@ -40,13 +40,14 @@ module Annoy
     # @param metric [String] The distance metric between vectors ('angular', 'dot', 'hamming', 'euclidean', or 'manhattan').
     # @param dtype [String] The data type of features ('float64' and 'float32').
     #   If metric is given 'hamming', 'uint64' is automatically assigned to this argument.
-    def initialize(n_features:, metric: 'angular', dtype: 'float64')
+    def initialize(n_features:, metric: 'angular', dtype: 'float64') # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
       raise ArgumentError, 'Expect n_features to be Integer.' unless n_features.is_a?(Numeric)
 
       @n_features = n_features.to_i
       @metric = metric
       @dtype = dtype
 
+      # rubocop:disable Layout/LineLength
       @index = case @metric
                when 'angular'
                  @dtype == 'float64' ? AnnoyIndexAngular.new(@n_features) : AnnoyIndexAngularFloat32.new(@n_features)
@@ -62,6 +63,7 @@ module Annoy
                else
                  raise ArgumentError, "No such metric: #{@metric}."
                end
+      # rubocop:enable Layout/LineLength
     end
 
     # Add item to be indexed.
