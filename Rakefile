@@ -7,7 +7,7 @@ RSpec::Core::RakeTask.new(:spec)
 
 require 'rake/extensiontask'
 
-task build: :compile
+task build: :compile # rubocop:disable Rake/Desc
 
 Rake::ExtensionTask.new('annoyext') do |ext|
   ext.ext_dir = 'ext/annoy'
