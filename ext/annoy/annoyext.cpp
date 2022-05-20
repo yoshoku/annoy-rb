@@ -18,9 +18,7 @@
 
 #include "annoyext.hpp"
 
-extern "C"
-void Init_annoyext(void)
-{
+extern "C" void Init_annoyext(void) {
   VALUE rb_mAnnoy = rb_define_module("Annoy");
   RbAnnoyIndex<AnnoyIndexAngular<double>, double>::define_class(rb_mAnnoy, "AnnoyIndexAngular");
   RbAnnoyIndex<AnnoyIndexDotProduct<double>, double>::define_class(rb_mAnnoy, "AnnoyIndexDotProduct");
