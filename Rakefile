@@ -13,6 +13,11 @@ require 'rake/extensiontask'
 
 task build: :compile # rubocop:disable Rake/Desc
 
+desc 'Run clang-format'
+task 'clang-format' do
+  sh 'clang-format -style=file -Werror --dry-run ext/annoy/annoyext.*'
+end
+
 Rake::ExtensionTask.new('annoyext') do |ext|
   ext.ext_dir = 'ext/annoy'
   ext.lib_dir = 'lib/annoy'
