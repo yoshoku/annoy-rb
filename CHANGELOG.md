@@ -1,3 +1,7 @@
+## 0.6.1
+
+- Refactor codes and configs with RuboCop and clang-format.
+
 ## 0.6.0
 - Add `dtype` argument to initialize method to specify the data type of vector element.
 If you want to load a search index created with the Python bindings, specify 'float32' to the dtype argument.
