@@ -11,8 +11,6 @@ AllCops:
     - 'ext/**/*'
     - 'tmp/**/*'
     - 'vendor/**/*'
-    - 'hnswlib.gemspec'
-    - 'Gemfile'
     - 'Steepfile'
 
 Gemspec/RequiredRubyVersion:
