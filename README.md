@@ -1,9 +1,9 @@
 # annoy-rb
 
-[![Build Status](https://github.com/yoshoku/annoy.rb/workflows/build/badge.svg)](https://github.com/yoshoku/annoy.rb/actions?query=workflow%3Abuild)
+[![Build Status](https://github.com/yoshoku/annoy-rb/workflows/build/badge.svg)](https://github.com/yoshoku/annoy-rb/actions?query=workflow%3Abuild)
 [![Gem Version](https://badge.fury.io/rb/annoy-rb.svg)](https://badge.fury.io/rb/annoy-rb)
-[![License](https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg)](https://github.com/yoshoku/annoy.rb/blob/main/LICENSE.txt)
-[![Documentation](https://img.shields.io/badge/api-reference-blue.svg)](https://yoshoku.github.io/annoy.rb/doc/)
+[![License](https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg)](https://github.com/yoshoku/annoy-rb/blob/main/LICENSE.txt)
+[![Documentation](https://img.shields.io/badge/api-reference-blue.svg)](https://yoshoku.github.io/annoy-rb/doc/)
 
 annoy-rb provides Ruby bindings for the [Annoy (Approximate Nearest Neighbors Oh Yeah)](https://github.com/spotify/annoy).
 
@@ -40,7 +40,7 @@ $ gem install annoy-rb -- --with-cxxflags=-march=native
 
 ## Documentation
 
-* [annoy-rb API Documentation](https://yoshoku.github.io/annoy.rb/doc/)
+* [annoy-rb API Documentation](https://yoshoku.github.io/annoy-rb/doc/)
 
 ## Usage
 
@@ -81,6 +81,6 @@ The gem is available as open source under the terms of the [Apache-2.0 License](
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/yoshoku/annoy.rb.
+Bug reports and pull requests are welcome on GitHub at https://github.com/yoshoku/annoy-rb.
 This project is intended to be a safe, welcoming space for collaboration,
 and contributors are expected to adhere to the [Contributor Covenant](https://contributor-covenant.org) code of conduct.

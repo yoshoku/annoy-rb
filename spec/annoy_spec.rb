@@ -169,7 +169,7 @@ RSpec.describe Annoy do
     end
 
     describe '#save and #load' do
-      context 'with an index created by annoy.rb' do
+      context 'with an index created by annoy-rb' do
         let(:filename) { File.expand_path("#{__dir__}/test.ann") }
 
         before { index.save(filename) }

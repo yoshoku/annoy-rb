@@ -10,13 +10,13 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Ruby bindings for the Annoy (Approximate Nearest Neighbors Oh Yeah).'
   spec.description   = 'Annoy.rb provides Ruby bindings for the Annoy (Approximate Nearest Neighbors Oh Yeah).'
-  spec.homepage      = 'https://github.com/yoshoku/annoy.rb'
+  spec.homepage      = 'https://github.com/yoshoku/annoy-rb'
   spec.license       = 'Apache-2.0'
 
   spec.metadata['homepage_uri'] = spec.homepage
   spec.metadata['source_code_uri'] = spec.homepage
-  spec.metadata['changelog_uri'] = 'https://github.com/yoshoku/annoy.rb/blob/main/CHANGELOG.md'
-  spec.metadata['documentation_uri'] = 'https://yoshoku.github.io/annoy.rb/doc/'
+  spec.metadata['changelog_uri'] = 'https://github.com/yoshoku/annoy-rb/blob/main/CHANGELOG.md'
+  spec.metadata['documentation_uri'] = 'https://yoshoku.github.io/annoy-rb/doc/'
   spec.metadata['rubygems_mfa_required'] = 'true'
 
   # Specify which files should be added to the gem when it is released.

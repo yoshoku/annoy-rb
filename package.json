@@ -1,6 +1,6 @@
 {
-  "name": "annoy.rb",
-  "repository": "git@github.com:yoshoku/annoy.rb.git",
+  "name": "annoy-rb",
+  "repository": "git@github.com:yoshoku/annoy-rb.git",
   "author": "Atsushi Tatsuma <yoshoku@outlook.com>",
   "license": "Apache-2.0",
   "private": true,
