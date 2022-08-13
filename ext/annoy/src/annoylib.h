@@ -885,6 +885,8 @@ protected:
   bool _built;
 public:
 
+   AnnoyIndex() : _f(0), _fd(0), _nodes(NULL), _n_items(0), _n_nodes(0), _nodes_size(0),
+                  _loaded(false), _verbose(false), _on_disk(false), _built(false) { }
    AnnoyIndex(int f) : _f(f), _seed(Random::default_seed) {
     _s = offsetof(Node, v) + _f * sizeof(T); // Size of each node
     _verbose = false;
