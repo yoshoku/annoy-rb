@@ -1,5 +1,5 @@
-#ifndef KISSRANDOM_H
-#define KISSRANDOM_H
+#ifndef ANNOY_KISSRANDOM_H
+#define ANNOY_KISSRANDOM_H
 
 #if defined(_MSC_VER) && _MSC_VER == 1500
 typedef unsigned __int32    uint32_t;
@@ -7,6 +7,8 @@ typedef unsigned __int64    uint64_t;
 #else
 #include <stdint.h>
 #endif
+
+namespace Annoy {
 
 // KISS = "keep it simple, stupid", but high quality random number generator
 // http://www0.cs.ucl.ac.uk/staff/d.jones/GoodPracticeRNG.pdf -> "Use a good RNG and build it into your code"
@@ -20,8 +22,13 @@ struct Kiss32Random {
   uint32_t z;
   uint32_t c;
 
+  static const uint32_t default_seed = 123456789;
+#if __cplusplus < 201103L
+  typedef uint32_t seed_type;
+#endif
+
   // seed must be != 0
-  Kiss32Random(uint32_t seed = 123456789) {
+  Kiss32Random(uint32_t seed = default_seed) {
     x = seed;
     y = 362436000;
     z = 521288629;
@@ -64,8 +71,13 @@ struct Kiss64Random {
   uint64_t z;
   uint64_t c;
 
+  static const uint64_t default_seed = 1234567890987654321ULL;
+#if __cplusplus < 201103L
+  typedef uint64_t seed_type;
+#endif
+
   // seed must be != 0
-  Kiss64Random(uint64_t seed = 1234567890987654321ULL) {
+  Kiss64Random(uint64_t seed = default_seed) {
     x = seed;
     y = 362436362436362436ULL;
     z = 1066149217761810ULL;
@@ -97,10 +109,12 @@ struct Kiss64Random {
     // Draw random integer between 0 and n-1 where n is at most the number of data points you have
     return kiss() % n;
   }
-  inline void set_seed(uint32_t seed) {
+  inline void set_seed(uint64_t seed) {
     x = seed;
   }
 };
+
+}
 
 #endif
 // vim: tabstop=2 shiftwidth=2

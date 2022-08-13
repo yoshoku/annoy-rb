@@ -13,8 +13,8 @@
 // the License.
 
 
-#ifndef ANNOYLIB_H
-#define ANNOYLIB_H
+#ifndef ANNOY_ANNOYLIB_H
+#define ANNOY_ANNOYLIB_H
 
 #include <stdio.h>
 #include <sys/stat.h>
@@ -58,6 +58,10 @@ typedef signed __int64    int64_t;
 #include <queue>
 #include <limits>
 
+#if __cplusplus >= 201103L
+#include <type_traits>
+#endif
+
 #ifdef ANNOYLIB_MULTITHREADED_BUILD
 #include <thread>
 #include <mutex>
@@ -72,9 +76,9 @@ typedef signed __int64    int64_t;
 // This allows others to supply their own logger / error printer without
 // requiring Annoy to import their headers. See RcppAnnoy for a use case.
 #ifndef __ERROR_PRINTER_OVERRIDE__
-  #define showUpdate(...) { fprintf(stderr, __VA_ARGS__ ); }
+  #define annoylib_showUpdate(...) { fprintf(stderr, __VA_ARGS__ ); }
 #else
-  #define showUpdate(...) { __ERROR_PRINTER_OVERRIDE__( __VA_ARGS__ ); }
+  #define annoylib_showUpdate(...) { __ERROR_PRINTER_OVERRIDE__( __VA_ARGS__ ); }
 #endif
 
 // Portable alloc definition, cf Writing R Extensions, Section 1.6.4
@@ -87,40 +91,24 @@ typedef signed __int64    int64_t;
   # include <alloca.h>
 #endif
 
-inline void set_error_from_errno(char **error, const char* msg) {
-  showUpdate("%s: %s (%d)\n", msg, strerror(errno), errno);
-  if (error) {
-    *error = (char *)malloc(256);  // TODO: win doesn't support snprintf
-    sprintf(*error, "%s: %s (%d)", msg, strerror(errno), errno);
-  }
-}
-
-inline void set_error_from_string(char **error, const char* msg) {
-  showUpdate("%s\n", msg);
-  if (error) {
-    *error = (char *)malloc(strlen(msg) + 1);
-    strcpy(*error, msg);
-  }
-}
-
 // We let the v array in the Node struct take whatever space is needed, so this is a mostly insignificant number.
 // Compilers need *some* size defined for the v array, and some memory checking tools will flag for buffer overruns if this is set too low.
-#define V_ARRAY_SIZE 65536
+#define ANNOYLIB_V_ARRAY_SIZE 65536
 
 #ifndef _MSC_VER
-#define popcount __builtin_popcountll
+#define annoylib_popcount __builtin_popcountll
 #else // See #293, #358
-#define popcount cole_popcount
+#define annoylib_popcount cole_popcount
 #endif
 
 #if !defined(NO_MANUAL_VECTORIZATION) && defined(__GNUC__) && (__GNUC__ >6) && defined(__AVX512F__)  // See #402
-#define USE_AVX512
+#define ANNOYLIB_USE_AVX512
 #elif !defined(NO_MANUAL_VECTORIZATION) && defined(__AVX__) && defined (__SSE__) && defined(__SSE2__) && defined(__SSE3__)
-#define USE_AVX
+#define ANNOYLIB_USE_AVX
 #else
 #endif
 
-#if defined(USE_AVX) || defined(USE_AVX512)
+#if defined(ANNOYLIB_USE_AVX) || defined(ANNOYLIB_USE_AVX512)
 #if defined(_MSC_VER)
 #include <intrin.h>
 #elif defined(__GNUC__)
@@ -129,10 +117,29 @@ inline void set_error_from_string(char **error, const char* msg) {
 #endif
 
 #if !defined(__MINGW32__)
-#define FTRUNCATE_SIZE(x) static_cast<int64_t>(x)
+#define ANNOYLIB_FTRUNCATE_SIZE(x) static_cast<int64_t>(x)
 #else
-#define FTRUNCATE_SIZE(x) (x)
+#define ANNOYLIB_FTRUNCATE_SIZE(x) (x)
 #endif
+
+namespace Annoy {
+
+inline void set_error_from_errno(char **error, const char* msg) {
+  annoylib_showUpdate("%s: %s (%d)\n", msg, strerror(errno), errno);
+  if (error) {
+    *error = (char *)malloc(256);  // TODO: win doesn't support snprintf
+    sprintf(*error, "%s: %s (%d)", msg, strerror(errno), errno);
+  }
+}
+
+inline void set_error_from_string(char **error, const char* msg) {
+  annoylib_showUpdate("%s\n", msg);
+  if (error) {
+    *error = (char *)malloc(strlen(msg) + 1);
+    strcpy(*error, msg);
+  }
+}
+
 
 using std::vector;
 using std::pair;
@@ -145,7 +152,7 @@ inline bool remap_memory_and_truncate(void** _ptr, int _fd, size_t old_size, siz
     bool ok = ftruncate(_fd, new_size) != -1;
 #else
     munmap(*_ptr, old_size);
-    bool ok = ftruncate(_fd, FTRUNCATE_SIZE(new_size)) != -1;
+    bool ok = ftruncate(_fd, ANNOYLIB_FTRUNCATE_SIZE(new_size)) != -1;
 #ifdef MAP_POPULATE
     *_ptr = mmap(*_ptr, new_size, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_POPULATE, _fd, 0);
 #else
@@ -194,7 +201,7 @@ inline T euclidean_distance(const T* x, const T* y, int f) {
   return d;
 }
 
-#ifdef USE_AVX
+#ifdef ANNOYLIB_USE_AVX
 // Horizontal single sum of 256bit vector.
 inline float hsum256_ps_avx(__m256 v) {
   const __m128 x128 = _mm_add_ps(_mm256_extractf128_ps(v, 1), _mm256_castps256_ps128(v));
@@ -277,7 +284,7 @@ inline float euclidean_distance<float>(const float* x, const float* y, int f) {
 
 #endif
 
-#ifdef USE_AVX512
+#ifdef ANNOYLIB_USE_AVX512
 template<>
 inline float dot<float>(const float* x, const float *y, int f) {
   float result = 0;
@@ -452,7 +459,7 @@ struct Angular : Base {
       S children[2]; // Will possibly store more than 2
       T norm;
     };
-    T v[V_ARRAY_SIZE];
+    T v[ANNOYLIB_V_ARRAY_SIZE];
   };
   template<typename S, typename T>
   static inline T distance(const Node<S, T>* x, const Node<S, T>* y, int f) {
@@ -523,7 +530,7 @@ struct DotProduct : Angular {
     S n_descendants;
     S children[2]; // Will possibly store more than 2
     T dot_factor;
-    T v[V_ARRAY_SIZE];
+    T v[ANNOYLIB_V_ARRAY_SIZE];
   };
 
   static const char* name() {
@@ -630,7 +637,7 @@ struct Hamming : Base {
   struct Node {
     S n_descendants;
     S children[2];
-    T v[V_ARRAY_SIZE];
+    T v[ANNOYLIB_V_ARRAY_SIZE];
   };
 
   static const size_t max_iterations = 20;
@@ -659,7 +666,7 @@ struct Hamming : Base {
   static inline T distance(const Node<S, T>* x, const Node<S, T>* y, int f) {
     size_t dist = 0;
     for (int i = 0; i < f; i++) {
-      dist += popcount(x->v[i] ^ y->v[i]);
+      dist += annoylib_popcount(x->v[i] ^ y->v[i]);
     }
     return dist;
   }
@@ -727,7 +734,7 @@ struct Minkowski : Base {
     S n_descendants;
     T a; // need an extra constant term to determine the offset of the plane
     S children[2];
-    T v[V_ARRAY_SIZE];
+    T v[ANNOYLIB_V_ARRAY_SIZE];
   };
   template<typename S, typename T>
   static inline T margin(const Node<S, T>* n, const T* y, int f) {
@@ -815,7 +822,7 @@ struct Manhattan : Minkowski {
   }
 };
 
-template<typename S, typename T>
+template<typename S, typename T, typename R = uint64_t>
 class AnnoyIndexInterface {
  public:
   // Note that the methods with an **error argument will allocate memory and write the pointer to that string if error is non-NULL
@@ -833,12 +840,18 @@ class AnnoyIndexInterface {
   virtual S get_n_trees() const = 0;
   virtual void verbose(bool v) = 0;
   virtual void get_item(S item, T* v) const = 0;
-  virtual void set_seed(int q) = 0;
+  virtual void set_seed(R q) = 0;
   virtual bool on_disk_build(const char* filename, char** error=NULL) = 0;
 };
 
 template<typename S, typename T, typename Distance, typename Random, class ThreadedBuildPolicy>
-  class AnnoyIndex : public AnnoyIndexInterface<S, T> {
+  class AnnoyIndex : public AnnoyIndexInterface<S, T, 
+#if __cplusplus >= 201103L
+    typename std::remove_const<decltype(Random::default_seed)>::type
+#else
+    typename Random::seed_type
+#endif
+    > {
   /*
    * We use random projection to build a forest of binary trees of all items.
    * Basically just split the hyperspace into two sides by a hyperplane,
@@ -849,6 +862,11 @@ template<typename S, typename T, typename Distance, typename Random, class Threa
 public:
   typedef Distance D;
   typedef typename D::template Node<S, T> Node;
+#if __cplusplus >= 201103L
+  typedef typename std::remove_const<decltype(Random::default_seed)>::type R;
+#else
+  typedef typename Random::seed_type R;
+#endif
 
 protected:
   const int _f;
@@ -859,8 +877,7 @@ protected:
   S _nodes_size;
   vector<S> _roots;
   S _K;
-  bool _is_seeded;
-  int _seed;
+  R _seed;
   bool _loaded;
   bool _verbose;
   int _fd;
@@ -868,9 +885,7 @@ protected:
   bool _built;
 public:
 
-   AnnoyIndex() : _f(0), _fd(0), _nodes(NULL), _n_items(0), _n_nodes(0), _nodes_size(0),
-                  _is_seeded(false), _loaded(false), _verbose(false), _on_disk(false), _built(false)  { }
-   AnnoyIndex(int f) : _f(f) {
+   AnnoyIndex(int f) : _f(f), _seed(Random::default_seed) {
     _s = offsetof(Node, v) + _f * sizeof(T); // Size of each node
     _verbose = false;
     _built = false;
@@ -924,7 +939,7 @@ public:
       return false;
     }
     _nodes_size = 1;
-    if (ftruncate(_fd, FTRUNCATE_SIZE(_s) * FTRUNCATE_SIZE(_nodes_size)) == -1) {
+    if (ftruncate(_fd, ANNOYLIB_FTRUNCATE_SIZE(_s) * ANNOYLIB_FTRUNCATE_SIZE(_nodes_size)) == -1) {
       set_error_from_errno(error, "Unable to truncate");
       return false;
     }
@@ -960,7 +975,7 @@ public:
       memcpy(_get(_n_nodes + (S)i), _get(_roots[i]), _s);
     _n_nodes += _roots.size();
 
-    if (_verbose) showUpdate("has %d nodes\n", _n_nodes);
+    if (_verbose) annoylib_showUpdate("has %d nodes\n", _n_nodes);
     
     if (_on_disk) {
       if (!remap_memory_and_truncate(&_nodes, _fd,
@@ -1029,7 +1044,7 @@ public:
     _n_nodes = 0;
     _nodes_size = 0;
     _on_disk = false;
-    _is_seeded = false;
+    _seed = Random::default_seed;
     _roots.clear();
   }
 
@@ -1048,7 +1063,7 @@ public:
       }
     }
     reinitialize();
-    if (_verbose) showUpdate("unloaded\n");
+    if (_verbose) annoylib_showUpdate("unloaded\n");
   }
 
   bool load(const char* filename, bool prefault=false, char** error=NULL) {
@@ -1076,7 +1091,7 @@ public:
 #ifdef MAP_POPULATE
       flags |= MAP_POPULATE;
 #else
-      showUpdate("prefault is set to true, but MAP_POPULATE is not defined on this platform");
+      annoylib_showUpdate("prefault is set to true, but MAP_POPULATE is not defined on this platform");
 #endif
     }
     _nodes = (Node*)mmap(0, size, PROT_READ, flags, _fd, 0);
@@ -1100,7 +1115,7 @@ public:
     _loaded = true;
     _built = true;
     _n_items = m;
-    if (_verbose) showUpdate("found %lu roots with degree %d\n", _roots.size(), m);
+    if (_verbose) annoylib_showUpdate("found %lu roots with degree %d\n", _roots.size(), m);
     return true;
   }
 
@@ -1136,16 +1151,13 @@ public:
     memcpy(v, m->v, (_f) * sizeof(T));
   }
 
-  void set_seed(int seed) {
-    _is_seeded = true;
+  void set_seed(R seed) {
     _seed = seed;
   }
 
   void thread_build(int q, int thread_idx, ThreadedBuildPolicy& threaded_build_policy) {
-    Random _random;
     // Each thread needs its own seed, otherwise each thread would be building the same tree(s)
-    int seed = _is_seeded ? _seed + thread_idx : thread_idx;
-    _random.set_seed(seed);
+    Random _random(_seed + thread_idx);
 
     vector<S> thread_roots;
     while (1) {
@@ -1162,7 +1174,7 @@ public:
         }
       }
 
-      if (_verbose) showUpdate("pass %zd...\n", thread_roots.size());
+      if (_verbose) annoylib_showUpdate("pass %zd...\n", thread_roots.size());
 
       vector<S> indices;
       threaded_build_policy.lock_shared_nodes();
@@ -1192,14 +1204,14 @@ protected:
           static_cast<size_t>(_s) * static_cast<size_t>(_nodes_size), 
           static_cast<size_t>(_s) * static_cast<size_t>(new_nodes_size)) && 
           _verbose)
-          showUpdate("File truncation error\n");
+          annoylib_showUpdate("File truncation error\n");
     } else {
       _nodes = realloc(_nodes, _s * new_nodes_size);
       memset((char *) _nodes + (_nodes_size * _s) / sizeof(char), 0, (new_nodes_size - _nodes_size) * _s);
     }
     
     _nodes_size = new_nodes_size;
-    if (_verbose) showUpdate("Reallocating to %d nodes: old_address=%p, new_address=%p\n", new_nodes_size, old, _nodes);
+    if (_verbose) annoylib_showUpdate("Reallocating to %d nodes: old_address=%p, new_address=%p\n", new_nodes_size, old, _nodes);
   }
 
   void _allocate_size(S n, ThreadedBuildPolicy& threaded_build_policy) {
@@ -1281,7 +1293,7 @@ protected:
           bool side = D::side(m, n->v, _f, _random);
           children_indices[side].push_back(j);
         } else {
-          showUpdate("No node for index %d?\n", j);
+          annoylib_showUpdate("No node for index %d?\n", j);
         }
       }
 
@@ -1293,7 +1305,7 @@ protected:
     // If we didn't find a hyperplane, just randomize sides as a last option
     while (_split_imbalance(children_indices[0], children_indices[1]) > 0.99) {
       if (_verbose)
-        showUpdate("\tNo hyperplane found (left has %ld children, right has %ld children)\n",
+        annoylib_showUpdate("\tNo hyperplane found (left has %ld children, right has %ld children)\n",
           children_indices[0].size(), children_indices[1].size());
 
       children_indices[0].clear();
@@ -1476,6 +1488,8 @@ public:
   }
 };
 #endif
+
+}
 
 #endif
 // vim: tabstop=2 shiftwidth=2
