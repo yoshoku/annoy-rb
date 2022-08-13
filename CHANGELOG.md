@@ -1,3 +1,8 @@
+## 0.7.0
+
+- Update bundled Annoy version to 1.17.1.
+- Refactor config files.
+
 ## 0.6.1
 
 - Refactor codes and configs with RuboCop and clang-format.

@@ -3,8 +3,8 @@
 # Annoy.rb is a Ruby wrapper for Annoy (Approximate Nearest Neighbors Oh Yeah).
 module Annoy
   # The version of Annoy.rb you are using.
-  VERSION = '0.6.1'
+  VERSION = '0.7.0'
 
   # The version of Annoy included with gem.
-  ANNOY_VERSION = '1.17.0'
+  ANNOY_VERSION = '1.17.1'
 end
