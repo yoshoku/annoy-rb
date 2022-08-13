@@ -26,6 +26,8 @@
 #include <annoylib.h>
 #include <kissrandom.h>
 
+using namespace Annoy;
+
 #ifdef ANNOYLIB_MULTITHREADED_BUILD
 typedef AnnoyIndexMultiThreadedBuildPolicy AnnoyIndexThreadedBuildPolicy;
 #else
