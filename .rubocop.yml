@@ -40,7 +40,7 @@ RSpec/ExampleLength:
   Max: 16
 
 RSpec/MultipleMemoizedHelpers:
-  Max: 8
+  Max: 10
 
 RSpec/NamedSubject:
   Enabled: false

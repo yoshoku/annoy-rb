@@ -6,6 +6,7 @@ RSpec.describe Annoy do
   end
 
   describe Annoy::AnnoyIndex do
+    let(:tol) { 1e-7 }
     let(:n_features) { 4 }
     let(:metric) { 'manhattan' }
     let(:dtype) { 'float64' }
@@ -16,11 +17,11 @@ RSpec.describe Annoy do
 
     before do
       index.seed(1)
-      index.add_item(0, [0, 1, 2, 3])
-      index.add_item(1, [1, 1, 2, 3])
-      index.add_item(2, [1, 1, 2, 4])
-      index.add_item(3, [2, 1, 2, 5])
-      index.add_item(4, [2, 1, 2, 6])
+      index.add_item(0, [0.0, 0.1, 0.2, 0.3])
+      index.add_item(1, [0.1, 0.1, 0.2, 0.3])
+      index.add_item(2, [0.1, 0.1, 0.2, 0.4])
+      index.add_item(3, [0.2, 0.1, 0.2, 0.5])
+      index.add_item(4, [0.2, 0.1, 0.2, 0.6])
       index.build(n_trees)
     end
 
@@ -94,14 +95,24 @@ RSpec.describe Annoy do
       context 'when include_distances is true' do
         subject { index.get_nns_by_item(0, n_neighbors, include_distances: true) }
 
-        it 'returns id list and distances of nearest neighbors' do
-          expect(subject).to match([[0, 1, 2], [0, 1, 2]])
+        it 'returns id list and distances of nearest neighbors', :aggregate_failures do
+          expect(subject[0]).to match([0, 1, 2])
+          expect(subject[1]).to be_within(tol).of([0.0, 0.1, 0.2])
+        end
+
+        context 'with float32 data type' do
+          let(:dtype) { 'float32' }
+
+          it 'returns id list and distances of nearest neighbors', :aggregate_failures do
+            expect(subject[0]).to match([0, 1, 2])
+            expect(subject[1]).to be_within(tol).of([0.0, 0.1, 0.2])
+          end
         end
       end
     end
 
     describe '#get_nns_by_vector' do
-      let(:query) { [0, 1, 2, 3] }
+      let(:query) { [0.0, 0.1, 0.2, 0.3] }
 
       context 'when include_distances is false' do
         subject { index.get_nns_by_vector(query, n_neighbors) }
@@ -114,8 +125,18 @@ RSpec.describe Annoy do
       context 'when include_distances is true' do
         subject { index.get_nns_by_vector(query, n_neighbors, include_distances: true) }
 
-        it 'returns id list and distances of nearest neighbors' do
-          expect(subject).to match([[0, 1, 2], [0, 1, 2]])
+        it 'returns id list and distances of nearest neighbors', :aggregate_failures do
+          expect(subject[0]).to match([0, 1, 2])
+          expect(subject[1]).to be_within(tol).of([0.0, 0.1, 0.2])
+        end
+
+        context 'with float32 data type' do
+          let(:dtype) { 'float32' }
+
+          it 'returns id list and distances of nearest neighbors', :aggregate_failures do
+            expect(subject[0]).to match([0, 1, 2])
+            expect(subject[1]).to be_within(tol).of([0.0, 0.1, 0.2])
+          end
         end
       end
     end
@@ -124,7 +145,15 @@ RSpec.describe Annoy do
       subject { index.get_item(0) }
 
       it 'returns the item vector specified by ID' do
-        expect(subject).to match([0, 1, 2, 3])
+        expect(subject).to be_within(tol).of([0.0, 0.1, 0.2, 0.3])
+      end
+
+      context 'with float32 data type' do
+        let(:dtype) { 'float32' }
+
+        it 'returns the item vector specified by ID' do
+          expect(subject).to be_within(tol).of([0.0, 0.1, 0.2, 0.3])
+        end
       end
     end
 
@@ -187,11 +216,11 @@ RSpec.describe Annoy do
         # from annoy import AnnoyIndex
         #
         # t = AnnoyIndex(4, 'angular')
-        # t.add_item(0, [1, 2, 3, 4])
-        # t.add_item(1, [5, 6, 7, 8])
-        # t.add_item(2, [9, 0, 1, 2])
-        # t.add_item(3, [3, 4, 5, 6])
-        # t.add_item(4, [7, 8, 9, 0])
+        # t.add_item(0, [0.1, 0.2, 0.3, 0.4])
+        # t.add_item(1, [0.5, 0.6, 0.7, 0.8])
+        # t.add_item(2, [0.9, 0.0, 0.1, 0.2])
+        # t.add_item(3, [0.3, 0.4, 0.5, 0.6])
+        # t.add_item(4, [0.7, 0.8, 0.9, 0.0])
         # t.build(5)
         # t.save('pytest.ann')
         let(:filename) { File.expand_path("#{__dir__}/pytest.ann") }
@@ -200,11 +229,11 @@ RSpec.describe Annoy do
           loaded = described_class.new(n_features: 4, metric: 'angular', dtype: 'float32')
           loaded.load(filename)
           expect(loaded.n_items).to eq(5)
-          expect(loaded.get_item(0)).to eq([1, 2, 3, 4])
-          expect(loaded.get_item(1)).to eq([5, 6, 7, 8])
-          expect(loaded.get_item(2)).to eq([9, 0, 1, 2])
-          expect(loaded.get_item(3)).to eq([3, 4, 5, 6])
-          expect(loaded.get_item(4)).to eq([7, 8, 9, 0])
+          expect(loaded.get_item(0)).to be_within(tol).of([0.1, 0.2, 0.3, 0.4])
+          expect(loaded.get_item(1)).to be_within(tol).of([0.5, 0.6, 0.7, 0.8])
+          expect(loaded.get_item(2)).to be_within(tol).of([0.9, 0.0, 0.1, 0.2])
+          expect(loaded.get_item(3)).to be_within(tol).of([0.3, 0.4, 0.5, 0.6])
+          expect(loaded.get_item(4)).to be_within(tol).of([0.7, 0.8, 0.9, 0.0])
         end
       end
     end
@@ -246,7 +275,7 @@ RSpec.describe Annoy do
         let(:metric) { 'euclidean' }
 
         it 'returns euclidean distance between items' do
-          expect(subject).to be_within(1e-8).of(1.41421356)
+          expect(subject).to be_within(tol).of(1.41421356)
         end
       end
 
