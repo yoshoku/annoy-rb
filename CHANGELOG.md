@@ -1,3 +1,7 @@
+## 0.7.1
+
+- Fix bug that item elements are converted to unsingned integers when dtype is set to float32 ([#3](https://github.com/yoshoku/annoy-rb/issues/3)).
+
 ## 0.7.0
 
 - Update bundled Annoy version to 1.17.1.
