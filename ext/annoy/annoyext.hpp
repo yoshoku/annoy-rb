@@ -111,7 +111,7 @@ private:
 
     F* vec = (F*)ruby_xmalloc(n_dims * sizeof(F));
     for (int i = 0; i < n_dims; i++) {
-      vec[i] = typeid(F) == typeid(double) ? NUM2DBL(rb_ary_entry(arr, i)) : NUM2UINT(rb_ary_entry(arr, i));
+      vec[i] = (F)(typeid(F) == typeid(uint64_t) ? NUM2UINT(rb_ary_entry(arr, i)) : NUM2DBL(rb_ary_entry(arr, i)));
     }
 
     char* error;
@@ -195,7 +195,7 @@ private:
       const int sz_distances = distances.size();
       VALUE distances_arr = rb_ary_new2(sz_distances);
       for (int i = 0; i < sz_distances; i++) {
-        rb_ary_store(distances_arr, i, typeid(F) == typeid(double) ? DBL2NUM(distances[i]) : UINT2NUM(distances[i]));
+        rb_ary_store(distances_arr, i, typeid(F) == typeid(uint64_t) ? UINT2NUM(distances[i]) : DBL2NUM(distances[i]));
       }
       VALUE res = rb_ary_new2(2);
       rb_ary_store(res, 0, neighbors_arr);
@@ -222,7 +222,7 @@ private:
 
     F* vec = (F*)ruby_xmalloc(n_dims * sizeof(F));
     for (int i = 0; i < n_dims; i++) {
-      vec[i] = typeid(F) == typeid(double) ? NUM2DBL(rb_ary_entry(_vec, i)) : NUM2UINT(rb_ary_entry(_vec, i));
+      vec[i] = (F)(typeid(F) == typeid(uint64_t) ? NUM2UINT(rb_ary_entry(_vec, i)) : NUM2DBL(rb_ary_entry(_vec, i)));
     }
 
     const int n_neighbors = NUM2INT(_n_neighbors);
@@ -246,7 +246,7 @@ private:
       const int sz_distances = distances.size();
       VALUE distances_arr = rb_ary_new2(sz_distances);
       for (int i = 0; i < sz_distances; i++) {
-        rb_ary_store(distances_arr, i, typeid(F) == typeid(double) ? DBL2NUM(distances[i]) : UINT2NUM(distances[i]));
+        rb_ary_store(distances_arr, i, typeid(F) == typeid(uint64_t) ? UINT2NUM(distances[i]) : DBL2NUM(distances[i]));
       }
       VALUE res = rb_ary_new2(2);
       rb_ary_store(res, 0, neighbors_arr);
@@ -266,7 +266,7 @@ private:
     get_annoy_index(self)->get_item(idx, vec);
 
     for (int i = 0; i < n_dims; i++) {
-      rb_ary_store(arr, i, typeid(F) == typeid(double) ? DBL2NUM(vec[i]) : UINT2NUM(vec[i]));
+      rb_ary_store(arr, i, typeid(F) == typeid(uint64_t) ? UINT2NUM(vec[i]) : DBL2NUM(vec[i]));
     }
 
     ruby_xfree(vec);
@@ -277,7 +277,7 @@ private:
     const int32_t i = (int32_t)NUM2INT(_i);
     const int32_t j = (int32_t)NUM2INT(_j);
     const F dist = get_annoy_index(self)->get_distance(i, j);
-    return typeid(F) == typeid(double) ? DBL2NUM(dist) : UINT2NUM(dist);
+    return typeid(F) == typeid(uint64_t) ? UINT2NUM(dist) : DBL2NUM(dist);
   };
 
   static VALUE _annoy_index_get_n_items(VALUE self) {
