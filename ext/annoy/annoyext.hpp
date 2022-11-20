@@ -35,31 +35,31 @@ typedef AnnoyIndexSingleThreadedBuildPolicy AnnoyIndexThreadedBuildPolicy;
 #endif
 
 // clang-format off
-template<typename F> using AnnoyIndexAngular = AnnoyIndex<int32_t, F, Angular, Kiss64Random, AnnoyIndexThreadedBuildPolicy>;
-template<typename F> using AnnoyIndexDotProduct = AnnoyIndex<int32_t, F, DotProduct, Kiss64Random, AnnoyIndexThreadedBuildPolicy>;
-template<typename F> using AnnoyIndexHamming = AnnoyIndex<int32_t, F, Hamming, Kiss64Random, AnnoyIndexThreadedBuildPolicy>;
-template<typename F> using AnnoyIndexEuclidean = AnnoyIndex<int32_t, F, Euclidean, Kiss64Random, AnnoyIndexThreadedBuildPolicy>;
-template<typename F> using AnnoyIndexManhattan = AnnoyIndex<int32_t, F, Manhattan, Kiss64Random, AnnoyIndexThreadedBuildPolicy>;
+template<typename El> using AnnoyIndexAngular = AnnoyIndex<int32_t, El, Angular, Kiss64Random, AnnoyIndexThreadedBuildPolicy>;
+template<typename El> using AnnoyIndexDotProduct = AnnoyIndex<int32_t, El, DotProduct, Kiss64Random, AnnoyIndexThreadedBuildPolicy>;
+template<typename El> using AnnoyIndexHamming = AnnoyIndex<int32_t, El, Hamming, Kiss64Random, AnnoyIndexThreadedBuildPolicy>;
+template<typename El> using AnnoyIndexEuclidean = AnnoyIndex<int32_t, El, Euclidean, Kiss64Random, AnnoyIndexThreadedBuildPolicy>;
+template<typename El> using AnnoyIndexManhattan = AnnoyIndex<int32_t, El, Manhattan, Kiss64Random, AnnoyIndexThreadedBuildPolicy>;
 // clang-format on
 
-template <class T, typename F> class RbAnnoyIndex {
+template <class Idx, typename El> class RbAnnoyIndex {
 public:
   static VALUE annoy_index_alloc(VALUE self) {
-    T* ptr = (T*)ruby_xmalloc(sizeof(T));
-    new (ptr) T();
+    Idx* ptr = (Idx*)ruby_xmalloc(sizeof(Idx));
+    new (ptr) Idx();
     return TypedData_Wrap_Struct(self, &annoy_index_type, ptr);
   };
 
   static void annoy_index_free(void* ptr) {
-    ((T*)ptr)->~AnnoyIndex();
+    ((Idx*)ptr)->~AnnoyIndex();
     ruby_xfree(ptr);
   };
 
-  static size_t annoy_index_size(const void* ptr) { return sizeof(*((T*)ptr)); };
+  static size_t annoy_index_size(const void* ptr) { return sizeof(*((Idx*)ptr)); };
 
-  static T* get_annoy_index(VALUE self) {
-    T* ptr;
-    TypedData_Get_Struct(self, T, &annoy_index_type, ptr);
+  static Idx* get_annoy_index(VALUE self) {
+    Idx* ptr;
+    TypedData_Get_Struct(self, Idx, &annoy_index_type, ptr);
     return ptr;
   };
 
@@ -90,8 +90,8 @@ private:
 
   static VALUE _annoy_index_init(VALUE self, VALUE _n_dims) {
     const int n_dims = NUM2INT(_n_dims);
-    T* ptr = get_annoy_index(self);
-    new (ptr) T(n_dims);
+    Idx* ptr = get_annoy_index(self);
+    new (ptr) Idx(n_dims);
     return Qnil;
   };
 
@@ -109,9 +109,9 @@ private:
       return Qfalse;
     }
 
-    F* vec = (F*)ruby_xmalloc(n_dims * sizeof(F));
+    El* vec = (El*)ruby_xmalloc(n_dims * sizeof(El));
     for (int i = 0; i < n_dims; i++) {
-      vec[i] = (F)(typeid(F) == typeid(uint64_t) ? NUM2UINT(rb_ary_entry(arr, i)) : NUM2DBL(rb_ary_entry(arr, i)));
+      vec[i] = (El)(typeid(El) == typeid(uint64_t) ? NUM2UINT(rb_ary_entry(arr, i)) : NUM2DBL(rb_ary_entry(arr, i)));
     }
 
     char* error;
@@ -180,7 +180,7 @@ private:
     const int search_k = NUM2INT(_search_k);
     const bool include_distances = _include_distances == Qtrue ? true : false;
     std::vector<int32_t> neighbors;
-    std::vector<F> distances;
+    std::vector<El> distances;
 
     get_annoy_index(self)->get_nns_by_item(idx, n_neighbors, search_k, &neighbors, include_distances ? &distances : NULL);
 
@@ -195,7 +195,7 @@ private:
       const int sz_distances = distances.size();
       VALUE distances_arr = rb_ary_new2(sz_distances);
       for (int i = 0; i < sz_distances; i++) {
-        rb_ary_store(distances_arr, i, typeid(F) == typeid(uint64_t) ? UINT2NUM(distances[i]) : DBL2NUM(distances[i]));
+        rb_ary_store(distances_arr, i, typeid(El) == typeid(uint64_t) ? UINT2NUM(distances[i]) : DBL2NUM(distances[i]));
       }
       VALUE res = rb_ary_new2(2);
       rb_ary_store(res, 0, neighbors_arr);
@@ -220,16 +220,16 @@ private:
       return Qfalse;
     }
 
-    F* vec = (F*)ruby_xmalloc(n_dims * sizeof(F));
+    El* vec = (El*)ruby_xmalloc(n_dims * sizeof(El));
     for (int i = 0; i < n_dims; i++) {
-      vec[i] = (F)(typeid(F) == typeid(uint64_t) ? NUM2UINT(rb_ary_entry(_vec, i)) : NUM2DBL(rb_ary_entry(_vec, i)));
+      vec[i] = (El)(typeid(El) == typeid(uint64_t) ? NUM2UINT(rb_ary_entry(_vec, i)) : NUM2DBL(rb_ary_entry(_vec, i)));
     }
 
     const int n_neighbors = NUM2INT(_n_neighbors);
     const int search_k = NUM2INT(_search_k);
     const bool include_distances = _include_distances == Qtrue ? true : false;
     std::vector<int32_t> neighbors;
-    std::vector<F> distances;
+    std::vector<El> distances;
 
     get_annoy_index(self)->get_nns_by_vector(vec, n_neighbors, search_k, &neighbors, include_distances ? &distances : NULL);
 
@@ -246,7 +246,7 @@ private:
       const int sz_distances = distances.size();
       VALUE distances_arr = rb_ary_new2(sz_distances);
       for (int i = 0; i < sz_distances; i++) {
-        rb_ary_store(distances_arr, i, typeid(F) == typeid(uint64_t) ? UINT2NUM(distances[i]) : DBL2NUM(distances[i]));
+        rb_ary_store(distances_arr, i, typeid(El) == typeid(uint64_t) ? UINT2NUM(distances[i]) : DBL2NUM(distances[i]));
       }
       VALUE res = rb_ary_new2(2);
       rb_ary_store(res, 0, neighbors_arr);
@@ -260,13 +260,13 @@ private:
   static VALUE _annoy_index_get_item(VALUE self, VALUE _idx) {
     const int32_t idx = (int32_t)NUM2INT(_idx);
     const int n_dims = get_annoy_index(self)->get_f();
-    F* vec = (F*)ruby_xmalloc(n_dims * sizeof(F));
+    El* vec = (El*)ruby_xmalloc(n_dims * sizeof(El));
     VALUE arr = rb_ary_new2(n_dims);
 
     get_annoy_index(self)->get_item(idx, vec);
 
     for (int i = 0; i < n_dims; i++) {
-      rb_ary_store(arr, i, typeid(F) == typeid(uint64_t) ? UINT2NUM(vec[i]) : DBL2NUM(vec[i]));
+      rb_ary_store(arr, i, typeid(El) == typeid(uint64_t) ? UINT2NUM(vec[i]) : DBL2NUM(vec[i]));
     }
 
     ruby_xfree(vec);
@@ -276,8 +276,8 @@ private:
   static VALUE _annoy_index_get_distance(VALUE self, VALUE _i, VALUE _j) {
     const int32_t i = (int32_t)NUM2INT(_i);
     const int32_t j = (int32_t)NUM2INT(_j);
-    const F dist = get_annoy_index(self)->get_distance(i, j);
-    return typeid(F) == typeid(uint64_t) ? UINT2NUM(dist) : DBL2NUM(dist);
+    const El dist = get_annoy_index(self)->get_distance(i, j);
+    return typeid(El) == typeid(uint64_t) ? UINT2NUM(dist) : DBL2NUM(dist);
   };
 
   static VALUE _annoy_index_get_n_items(VALUE self) {
@@ -322,8 +322,8 @@ private:
 };
 
 // clang-format off
-template<class T, typename F>
-const rb_data_type_t RbAnnoyIndex<T, F>::annoy_index_type = {
+template<class Idx, typename El>
+const rb_data_type_t RbAnnoyIndex<Idx, El>::annoy_index_type = {
   "RbAnnoyIndex",
   {
     NULL,
