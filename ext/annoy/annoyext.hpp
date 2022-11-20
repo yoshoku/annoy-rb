@@ -42,12 +42,15 @@ template<typename El> using AnnoyIndexEuclidean = AnnoyIndex<int32_t, El, Euclid
 template<typename El> using AnnoyIndexManhattan = AnnoyIndex<int32_t, El, Manhattan, Kiss64Random, AnnoyIndexThreadedBuildPolicy>;
 // clang-format on
 
-template <class Idx, typename El> class RbAnnoyIndex {
+template <class Idx, typename El, class Impl>
+class RbAnnoyIndex {
 public:
+  // static const rb_data_type_t annoy_index_type;
+
   static VALUE annoy_index_alloc(VALUE self) {
     Idx* ptr = (Idx*)ruby_xmalloc(sizeof(Idx));
     new (ptr) Idx();
-    return TypedData_Wrap_Struct(self, &annoy_index_type, ptr);
+    return TypedData_Wrap_Struct(self, &Impl::annoy_index_type, ptr);
   };
 
   static void annoy_index_free(void* ptr) {
@@ -55,11 +58,13 @@ public:
     ruby_xfree(ptr);
   };
 
-  static size_t annoy_index_size(const void* ptr) { return sizeof(*((Idx*)ptr)); };
+  static size_t annoy_index_size(const void* ptr) {
+    return sizeof(*((Idx*)ptr));
+  };
 
   static Idx* get_annoy_index(VALUE self) {
     Idx* ptr;
-    TypedData_Get_Struct(self, Idx, &annoy_index_type, ptr);
+    TypedData_Get_Struct(self, Idx, &Impl::annoy_index_type, ptr);
     return ptr;
   };
 
@@ -86,8 +91,6 @@ public:
   };
 
 private:
-  static const rb_data_type_t annoy_index_type;
-
   static VALUE _annoy_index_init(VALUE self, VALUE _n_dims) {
     const int n_dims = NUM2INT(_n_dims);
     Idx* ptr = get_annoy_index(self);
@@ -321,19 +324,85 @@ private:
   };
 };
 
-// clang-format off
-template<class Idx, typename El>
-const rb_data_type_t RbAnnoyIndex<Idx, El>::annoy_index_type = {
-  "RbAnnoyIndex",
-  {
-    NULL,
-    RbAnnoyIndex::annoy_index_free,
-    RbAnnoyIndex::annoy_index_size
-  },
-  NULL,
-  NULL,
-  RUBY_TYPED_FREE_IMMEDIATELY
+class RbAnnoyIndexAngular : public RbAnnoyIndex<AnnoyIndexAngular<double>, double, RbAnnoyIndexAngular> {
+public:
+  static const rb_data_type_t annoy_index_type;
 };
-// clang-format on
+
+const rb_data_type_t RbAnnoyIndexAngular::annoy_index_type = {
+  "RbAnnoyIndexAngular", { NULL, RbAnnoyIndexAngular::annoy_index_free, RbAnnoyIndexAngular::annoy_index_size }, NULL, NULL, 0
+};
+
+class RbAnnoyIndexDotProduct : public RbAnnoyIndex<AnnoyIndexDotProduct<double>, double, RbAnnoyIndexDotProduct> {
+public:
+  static const rb_data_type_t annoy_index_type;
+};
+
+const rb_data_type_t RbAnnoyIndexDotProduct::annoy_index_type = {
+  "RbAnnoyIndexDotProduct", { NULL, RbAnnoyIndexDotProduct::annoy_index_free, RbAnnoyIndexDotProduct::annoy_index_size }, NULL, NULL, 0
+};
+
+class RbAnnoyIndexHamming : public RbAnnoyIndex<AnnoyIndexHamming<uint64_t>, uint64_t, RbAnnoyIndexHamming> {
+public:
+  static const rb_data_type_t annoy_index_type;
+};
+
+const rb_data_type_t RbAnnoyIndexHamming::annoy_index_type = {
+  "RbAnnoyIndexHamming", { NULL, RbAnnoyIndexHamming::annoy_index_free, RbAnnoyIndexHamming::annoy_index_size }, NULL, NULL, 0
+};
+
+class RbAnnoyIndexEuclidean : public RbAnnoyIndex<AnnoyIndexEuclidean<double>, double, RbAnnoyIndexEuclidean> {
+public:
+  static const rb_data_type_t annoy_index_type;
+};
+
+const rb_data_type_t RbAnnoyIndexEuclidean::annoy_index_type = {
+  "RbAnnoyIndexEuclidean", { NULL, RbAnnoyIndexEuclidean::annoy_index_free, RbAnnoyIndexEuclidean::annoy_index_size }, NULL, NULL, 0
+};
+
+class RbAnnoyIndexManhattan : public RbAnnoyIndex<AnnoyIndexManhattan<double>, double, RbAnnoyIndexManhattan> {
+public:
+  static const rb_data_type_t annoy_index_type;
+};
+
+const rb_data_type_t RbAnnoyIndexManhattan::annoy_index_type = {
+  "RbAnnoyIndexManhattan", { NULL, RbAnnoyIndexManhattan::annoy_index_free, RbAnnoyIndexManhattan::annoy_index_size }, NULL, NULL, 0
+};
+
+class RbAnnoyIndexAngularFloat32 : public RbAnnoyIndex<AnnoyIndexAngular<float>, float, RbAnnoyIndexAngularFloat32> {
+public:
+  static const rb_data_type_t annoy_index_type;
+};
+
+const rb_data_type_t RbAnnoyIndexAngularFloat32::annoy_index_type = {
+  "RbAnnoyIndexAngularFloat32", { NULL, RbAnnoyIndexAngularFloat32::annoy_index_free, RbAnnoyIndexAngularFloat32::annoy_index_size }, NULL, NULL, 0
+};
+
+class RbAnnoyIndexDotProductFloat32 : public RbAnnoyIndex<AnnoyIndexDotProduct<float>, float, RbAnnoyIndexDotProductFloat32> {
+public:
+  static const rb_data_type_t annoy_index_type;
+};
+
+const rb_data_type_t RbAnnoyIndexDotProductFloat32::annoy_index_type = {
+  "RbAnnoyIndexDotProductFloat32", { NULL, RbAnnoyIndexDotProductFloat32::annoy_index_free, RbAnnoyIndexDotProductFloat32::annoy_index_size }, NULL, NULL, 0
+};
+
+class RbAnnoyIndexEuclideanFloat32 : public RbAnnoyIndex<AnnoyIndexEuclidean<float>, float, RbAnnoyIndexEuclideanFloat32> {
+public:
+  static const rb_data_type_t annoy_index_type;
+};
+
+const rb_data_type_t RbAnnoyIndexEuclideanFloat32::annoy_index_type = {
+  "RbAnnoyIndexEuclideanFloat32", { NULL, RbAnnoyIndexEuclideanFloat32::annoy_index_free, RbAnnoyIndexEuclideanFloat32::annoy_index_size }, NULL, NULL, 0
+};
+
+class RbAnnoyIndexManhattanFloat32 : public RbAnnoyIndex<AnnoyIndexManhattan<float>, float, RbAnnoyIndexManhattanFloat32> {
+public:
+  static const rb_data_type_t annoy_index_type;
+};
+
+const rb_data_type_t RbAnnoyIndexManhattanFloat32::annoy_index_type = {
+  "RbAnnoyIndexManhattanFloat32", { NULL, RbAnnoyIndexManhattanFloat32::annoy_index_free, RbAnnoyIndexManhattanFloat32::annoy_index_size }, NULL, NULL, 0
+};
 
 #endif /* ANNOYEXT_HPP */
