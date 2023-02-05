@@ -1,3 +1,7 @@
+## 0.7.2
+
+- Refactor native extension codes to set rb_data_type_t.wrap_struct_name for each metric and dtype.
+
 ## 0.7.1
 
 - Fix bug that item elements are converted to unsingned integers when dtype is set to float32 ([#3](https://github.com/yoshoku/annoy-rb/issues/3)).
