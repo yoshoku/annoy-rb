@@ -5,16 +5,29 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+    name: Ruby ${{ matrix.ruby }}
     strategy:
       fail-fast: false
       matrix:
         ruby: [ '3.2', '3.3', '3.4' ]
     steps:
       - uses: actions/checkout@v4
-      - name: Set upt Ruby ${{ matrix.ruby }}
+      - name: Set up Ruby ${{ matrix.ruby }}
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Build and test with Rake
+        run: bundle exec rake
+  build-mac:
+    runs-on: macos-latest
+    name: Ruby 3.4 (macOS)
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.4
           bundler-cache: true
       - name: Build and test with Rake
         run: bundle exec rake
