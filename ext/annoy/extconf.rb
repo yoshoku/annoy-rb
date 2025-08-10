@@ -1,8 +1,22 @@
 require 'mkmf'
 
-abort 'libstdc++ is not found.' unless have_library('stdc++')
+IS_MSWIN = /mswin/ =~ RUBY_PLATFORM
+IS_DARWIN = /darwin/ =~ RUBY_PLATFORM
 
-$CXXFLAGS << " -std=c++14"
+if IS_DARWIN
+  abort 'libc++ is not found.' unless have_library('c++')
+end
+
+if !IS_DARWIN && !IS_MSWIN
+  abort 'libstdc++ is not found.' unless have_library('stdc++')
+end
+
+if IS_MSWIN
+  $CXXFLAGS << ' /std:c++17'
+else
+  $CXXFLAGS << ' -std=c++14'
+end
+
 $INCFLAGS << " -I$(srcdir)/src"
 $VPATH << "$(srcdir)/src"
 
