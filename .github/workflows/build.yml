@@ -19,6 +19,20 @@ jobs:
           bundler-cache: true
       - name: Build and test with Rake
         run: bundle exec rake
+
+  build-win:
+    runs-on: windows-latest
+    name: Ruby 3.4 (Windows)
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.4
+          bundler-cache: true
+      - name: Build and test with Rake
+        run: bundle exec rake
+
   build-mac:
     runs-on: macos-latest
     name: Ruby 3.4 (macOS)
