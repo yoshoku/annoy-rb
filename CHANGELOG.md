@@ -1,3 +1,7 @@
+## [[0.8.0](https://github.com/yoshoku/annoy-rb/compare/v0.7.2...v0.8.0)] - 2025-08-10
+
+- Change to set library options accoding to platform when building ([#6](https://github.com/yoshoku/annoy-rb/issues/6)).
+
 ## 0.7.2
 
 - Refactor native extension codes to set rb_data_type_t.wrap_struct_name for each metric and dtype.
