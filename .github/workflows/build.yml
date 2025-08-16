@@ -16,7 +16,7 @@ jobs:
       matrix:
         ruby: [ '3.2', '3.3', '3.4' ]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Ruby ${{ matrix.ruby }}
         uses: ruby/setup-ruby@v1
         with:
@@ -29,7 +29,7 @@ jobs:
     runs-on: windows-latest
     name: Ruby 3.4 (Windows)
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -42,7 +42,7 @@ jobs:
     runs-on: macos-latest
     name: Ruby 3.4 (macOS)
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
