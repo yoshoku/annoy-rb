@@ -4,11 +4,11 @@ IS_MSWIN = /mswin/ =~ RUBY_PLATFORM
 IS_DARWIN = /darwin/ =~ RUBY_PLATFORM
 
 if IS_DARWIN
-  abort 'libc++ is not found.' unless have_library('c++')
+  warn 'libc++ is not found.' unless have_library('c++')
 end
 
 if !IS_DARWIN && !IS_MSWIN
-  abort 'libstdc++ is not found.' unless have_library('stdc++')
+  warn 'libstdc++ is not found.' unless have_library('stdc++')
 end
 
 if IS_MSWIN
