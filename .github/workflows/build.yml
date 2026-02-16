@@ -53,6 +53,7 @@ jobs:
 
   build-rhel:
     runs-on: ubuntu-latest
+    name: Ruby 3.3 (Rocky)
     container: rockylinux/rockylinux:9
     steps:
       - uses: actions/checkout@v6
