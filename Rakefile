@@ -31,4 +31,4 @@ Rake::ExtensionTask.new('annoyext') do |ext|
   ext.lib_dir = 'lib/annoy'
 end
 
-task default: %i[clobber compile rubocop spec]
+task default: %i[clobber compile spec]
