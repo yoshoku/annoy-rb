@@ -50,3 +50,20 @@ jobs:
           bundler-cache: true
       - name: Build and test with Rake
         run: bundle exec rake
+
+  build-rhel:
+    runs-on: ubuntu-latest
+    container: rockylinux/rockylinux:9
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up Ruby 3.3
+        run: |
+          dnf update -y
+          dnf install -y dnf-plugins-core
+          dnf config-manager --set-enabled crb
+          dnf module -y enable ruby:3.3
+          dnf install -y gcc gcc-g++ make git libyaml-devel ruby-devel ruby
+          bundle config silence_root_warning true
+          bundle install
+      - name: Build and test with Rake
+        run: bundle exec rake
