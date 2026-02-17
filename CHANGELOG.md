@@ -1,3 +1,7 @@
+## [[0.8.1](https://github.com/yoshoku/annoy-rb/compare/v0.8.0...v0.8.1)] - 2026-02-17
+
+- Remove C++ shared library loading check from native extensions build step.
+
 ## [[0.8.0](https://github.com/yoshoku/annoy-rb/compare/v0.7.2...v0.8.0)] - 2025-08-10
 
 - Change to set library options accoding to platform when building ([#6](https://github.com/yoshoku/annoy-rb/issues/6)).
