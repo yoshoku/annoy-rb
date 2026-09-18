@@ -47,7 +47,7 @@ module Annoy
       @metric = metric
       @dtype = dtype
 
-      # rubocop:disable Layout/LineLength
+      # rubocop:disable-next Layout/LineLength
       @index = case @metric
                when 'angular'
                  @dtype == 'float64' ? AnnoyIndexAngular.new(@n_features) : AnnoyIndexAngularFloat32.new(@n_features)
@@ -63,7 +63,6 @@ module Annoy
                else
                  raise ArgumentError, "No such metric: #{@metric}."
                end
-      # rubocop:enable Layout/LineLength
     end
 
     # Add item to be indexed.
